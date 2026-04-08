@@ -1,0 +1,368 @@
+{
+  "task_name": "task2_sdtm_validation",
+  "description": "Pharmaverse AE records with varied violation counts (0-5 per case), including true clean records.",
+  "cases": [
+    {
+      "case_id": "PV_T2_1",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1015",
+        "AETERM": "APPLICATION SITE ERYTHEMA",
+        "AEDECOD": "APPLICATION SITE ERYTHEMA",
+        "AESTDTC": "01-03-2014",
+        "AEENDTC": "NA",
+        "AESEV": "Mild",
+        "AESER": "No",
+        "AEREL": "Probably Related",
+        "AEOUT": "Not Recovered"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2014-01-03"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Severity not in controlled terminology (must be MILD, MODERATE, or SEVERE)",
+            "corrected_value": "MILD"
+          },
+          {
+            "field": "AESER",
+            "issue": "Serious event flag must be Y or N",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Relationship value not in expected sponsor terminology",
+            "corrected_value": "PROBABLE"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Outcome value not in controlled terminology",
+            "corrected_value": "NOT RECOVERED/NOT RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "PV_T2_2",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1015",
+        "AETERM": "APPLICATION SITE PRURITUS",
+        "AEDECOD": "APPLICATION SITE PRURITUS",
+        "AESTDTC": "01-03-2014",
+        "AEENDTC": "NA",
+        "AESEV": "Mild",
+        "AESER": "No",
+        "AEREL": "Probably Related",
+        "AEOUT": "Not Recovered"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2014-01-03"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Severity not in controlled terminology (must be MILD, MODERATE, or SEVERE)",
+            "corrected_value": "MILD"
+          },
+          {
+            "field": "AESER",
+            "issue": "Serious event flag must be Y or N",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Relationship value not in expected sponsor terminology",
+            "corrected_value": "PROBABLE"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Outcome value not in controlled terminology",
+            "corrected_value": "NOT RECOVERED/NOT RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "PV_T2_3",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1015",
+        "AETERM": "DIARRHOEA",
+        "AEDECOD": "DIARRHOEA",
+        "AESTDTC": "01-09-2014",
+        "AEENDTC": "2014-01-11",
+        "AESEV": "Mild",
+        "AESER": "No",
+        "AEREL": "Remote",
+        "AEOUT": "Resolved"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2014-01-09"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Severity not in controlled terminology (must be MILD, MODERATE, or SEVERE)",
+            "corrected_value": "MILD"
+          },
+          {
+            "field": "AESER",
+            "issue": "Serious event flag must be Y or N",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Relationship value not in expected sponsor terminology",
+            "corrected_value": "REMOTE"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Outcome value not in controlled terminology",
+            "corrected_value": "RECOVERED/RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "PV_T2_4",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1023",
+        "AETERM": "ATRIOVENTRICULAR BLOCK SECOND DEGREE",
+        "AEDECOD": "ATRIOVENTRICULAR BLOCK SECOND DEGREE",
+        "AESTDTC": "08-26-2012",
+        "AEENDTC": "NA",
+        "AESEV": "Mild",
+        "AESER": "No",
+        "AEREL": "Possibly Related",
+        "AEOUT": "Not Recovered"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2012-08-26"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Severity not in controlled terminology (must be MILD, MODERATE, or SEVERE)",
+            "corrected_value": "MILD"
+          },
+          {
+            "field": "AESER",
+            "issue": "Serious event flag must be Y or N",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Relationship value not in expected sponsor terminology",
+            "corrected_value": "POSSIBLE"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Outcome value not in controlled terminology",
+            "corrected_value": "NOT RECOVERED/NOT RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "PV_T2_5",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1023",
+        "AETERM": "ERYTHEMA",
+        "AEDECOD": "ERYTHEMA",
+        "AESTDTC": "08-07-2012",
+        "AEENDTC": "2012-08-30",
+        "AESEV": "Mild",
+        "AESER": "No",
+        "AEREL": "Possibly Related",
+        "AEOUT": "Not Recovered"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2012-08-07"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Severity not in controlled terminology (must be MILD, MODERATE, or SEVERE)",
+            "corrected_value": "MILD"
+          },
+          {
+            "field": "AESER",
+            "issue": "Serious event flag must be Y or N",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Relationship value not in expected sponsor terminology",
+            "corrected_value": "POSSIBLE"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Outcome value not in controlled terminology",
+            "corrected_value": "NOT RECOVERED/NOT RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "PV_T2_6",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1028",
+        "AETERM": "APPLICATION SITE ERYTHEMA",
+        "AEDECOD": "APPLICATION SITE ERYTHEMA",
+        "AESTDTC": "07-21-2013",
+        "AEENDTC": "NA",
+        "AESEV": "MILD",
+        "AESER": "No",
+        "AEREL": "Possibly Related",
+        "AEOUT": "Not Recovered"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2013-07-21"
+          },
+          {
+            "field": "AESER",
+            "issue": "Serious event flag must be Y or N",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Relationship value not in expected sponsor terminology",
+            "corrected_value": "POSSIBLE"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Outcome value not in controlled terminology",
+            "corrected_value": "NOT RECOVERED/NOT RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "PV_T2_7",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1028",
+        "AETERM": "APPLICATION SITE PRURITUS",
+        "AEDECOD": "APPLICATION SITE PRURITUS",
+        "AESTDTC": "08-08-2013",
+        "AEENDTC": "NA",
+        "AESEV": "Mild",
+        "AESER": "N",
+        "AEREL": "Probably Related",
+        "AEOUT": "Not Recovered"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2013-08-08"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Severity not in controlled terminology (must be MILD, MODERATE, or SEVERE)",
+            "corrected_value": "MILD"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Relationship value not in expected sponsor terminology",
+            "corrected_value": "PROBABLE"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Outcome value not in controlled terminology",
+            "corrected_value": "NOT RECOVERED/NOT RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "PV_T2_8",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1034",
+        "AETERM": "APPLICATION SITE PRURITUS",
+        "AEDECOD": "APPLICATION SITE PRURITUS",
+        "AESTDTC": "2014-08-27",
+        "AEENDTC": "NA",
+        "AESEV": "MILD",
+        "AESER": "N",
+        "AEREL": "PROBABLE",
+        "AEOUT": "NOT RECOVERED/NOT RESOLVED"
+      },
+      "ground_truth": {
+        "violations": []
+      }
+    },
+    {
+      "case_id": "PV_T2_9",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1034",
+        "AETERM": "FATIGUE",
+        "AEDECOD": "FATIGUE",
+        "AESTDTC": "2014-11-02",
+        "AEENDTC": "NA",
+        "AESEV": "MILD",
+        "AESER": "N",
+        "AEREL": "POSSIBLE",
+        "AEOUT": "NOT RECOVERED/NOT RESOLVED"
+      },
+      "ground_truth": {
+        "violations": []
+      }
+    },
+    {
+      "case_id": "PV_T2_10",
+      "task_description": "Identify every terminology or formatting violation in this SDTM AE record. Return a JSON object with key 'violations'. Not every field is wrong \u2014 only report actual violations.",
+      "study_context": "Validate this AE record against expected SDTM conventions.\n- AESTDTC must be YYYY-MM-DD (ISO 8601)\n- AESEV must be one of: MILD, MODERATE, SEVERE (uppercase)\n- AESER must be Y or N\n- AEREL must use sponsor terminology: PROBABLE, POSSIBLE, REMOTE, NONE, or NA\n- AEOUT must use exact SDTM term: RECOVERED/RESOLVED, NOT RECOVERED/NOT RESOLVED, or FATAL\nFields that already conform are NOT violations. Only report fields that need correction.",
+      "input_data": {
+        "USUBJID": "01-701-1047",
+        "AETERM": "BUNDLE BRANCH BLOCK LEFT",
+        "AEDECOD": "BUNDLE BRANCH BLOCK LEFT",
+        "AESTDTC": "2013-03-10",
+        "AEENDTC": "NA",
+        "AESEV": "MILD",
+        "AESER": "N",
+        "AEREL": "NONE",
+        "AEOUT": "NOT RECOVERED/NOT RESOLVED"
+      },
+      "ground_truth": {
+        "violations": []
+      }
+    }
+  ]
+}

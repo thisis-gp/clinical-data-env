@@ -1,0 +1,246 @@
+{
+  "task_name": "task1_edc_to_sdtm",
+  "description": "Pharmaverse-derived raw demographics mapped to SDTM DM outputs (10 cases, diverse races).",
+  "cases": [
+    {
+      "case_id": "PV_T1_1",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1015",
+        "SITEID_RAW": "701",
+        "IT.AGE": "63",
+        "IT.SEX": "Female",
+        "IT.RACE": "White",
+        "IC_DT": "02/01/2014",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1015",
+        "AGE": 63,
+        "SEX": "F",
+        "RACE": "WHITE",
+        "RFSTDTC": "2014-01-02",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_2",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1203",
+        "SITEID_RAW": "701",
+        "IT.AGE": "81",
+        "IT.SEX": "Female",
+        "IT.RACE": "Black Or African American",
+        "IC_DT": "02/02/2013",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1203",
+        "AGE": 81,
+        "SEX": "F",
+        "RACE": "BLACK OR AFRICAN AMERICAN",
+        "RFSTDTC": "2013-02-02",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_3",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1275",
+        "SITEID_RAW": "701",
+        "IT.AGE": "61",
+        "IT.SEX": "Male",
+        "IT.RACE": "American Indian Or Alaska Native",
+        "IC_DT": "07/02/2014",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1275",
+        "AGE": 61,
+        "SEX": "M",
+        "RACE": "AMERICAN INDIAN OR ALASKA NATIVE",
+        "RFSTDTC": "2014-02-07",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_4",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1023",
+        "SITEID_RAW": "701",
+        "IT.AGE": "64",
+        "IT.SEX": "Male",
+        "IT.RACE": "White",
+        "IC_DT": "05/08/2012",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1023",
+        "AGE": 64,
+        "SEX": "M",
+        "RACE": "WHITE",
+        "RFSTDTC": "2012-08-05",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_5",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1363",
+        "SITEID_RAW": "701",
+        "IT.AGE": "81",
+        "IT.SEX": "Female",
+        "IT.RACE": "Black Or African American",
+        "IC_DT": "30/05/2013",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1363",
+        "AGE": 81,
+        "SEX": "F",
+        "RACE": "BLACK OR AFRICAN AMERICAN",
+        "RFSTDTC": "2013-05-30",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_6",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1028",
+        "SITEID_RAW": "701",
+        "IT.AGE": "71",
+        "IT.SEX": "Male",
+        "IT.RACE": "White",
+        "IC_DT": "19/07/2013",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1028",
+        "AGE": 71,
+        "SEX": "M",
+        "RACE": "WHITE",
+        "RFSTDTC": "2013-07-19",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_7",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1442",
+        "SITEID_RAW": "701",
+        "IT.AGE": "57",
+        "IT.SEX": "Female",
+        "IT.RACE": "Black Or African American",
+        "IC_DT": "26/10/2013",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1442",
+        "AGE": 57,
+        "SEX": "F",
+        "RACE": "BLACK OR AFRICAN AMERICAN",
+        "RFSTDTC": "2013-10-26",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_8",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1033",
+        "SITEID_RAW": "701",
+        "IT.AGE": "74",
+        "IT.SEX": "Male",
+        "IT.RACE": "White",
+        "IC_DT": "18/03/2014",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1033",
+        "AGE": 74,
+        "SEX": "M",
+        "RACE": "WHITE",
+        "RFSTDTC": "2014-03-18",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_9",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + SITEID_RAW + '-' + PATNUM\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- IC_DT is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from IC_DT\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "PATNUM": "1197",
+        "SITEID_RAW": "703",
+        "IT.AGE": "76",
+        "IT.SEX": "Female",
+        "IT.RACE": "Black Or African American",
+        "IC_DT": "16/06/2013",
+        "COUNTRY_NAME": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-703-1197",
+        "AGE": 76,
+        "SEX": "F",
+        "RACE": "BLACK OR AFRICAN AMERICAN",
+        "RFSTDTC": "2013-06-16",
+        "COUNTRY": "USA"
+      }
+    },
+    {
+      "case_id": "PV_T1_10",
+      "task_description": "Convert this raw demographic record into an SDTM DM-style output with exactly these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY. Return only those six fields \u2014 no extras.",
+      "study_context": "Map the raw demographic fields to the SDTM DM target variables.\n- For this study, USUBJID uses the provided USUBJID_PREFIX, not the full STUDY text.\n- USUBJID = USUBJID_PREFIX + '-' + site/investigator identifier + '-' + patient identifier\n- AGE = integer years\n- SEX = 'M' or 'F'  (Male -> M, Female -> F)\n- RACE = uppercase SDTM controlled terminology\n  Examples: 'White' -> 'WHITE', 'Black Or African American' -> 'BLACK OR AFRICAN AMERICAN',\n  'Asian' -> 'ASIAN', 'American Indian Or Alaska Native' -> 'AMERICAN INDIAN OR ALASKA NATIVE'\n- Consent date is in DD/MM/YYYY format \u2014 day first, then month, then year\n- RFSTDTC = ISO 8601 date YYYY-MM-DD converted from the consent date\n- COUNTRY = ISO 3166 alpha-3 code (e.g. 'United States' -> 'USA')\n- Some source systems use non-standard raw field names; infer the correct mapping from meaning, not exact variable names.",
+      "input_data": {
+        "STUDY": "CDISCPILOT01",
+        "USUBJID_PREFIX": "01",
+        "SUBJECT_NO": "1034",
+        "INVESTIGATOR_SITE": "701",
+        "AGE_YRS": "77",
+        "GENDER_TEXT": "Female",
+        "RACEN": "White",
+        "DATE_OF_CONSENT": "01/07/2014",
+        "NATION": "United States"
+      },
+      "ground_truth": {
+        "USUBJID": "01-701-1034",
+        "AGE": 77,
+        "SEX": "F",
+        "RACE": "WHITE",
+        "RFSTDTC": "2014-07-01",
+        "COUNTRY": "USA"
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "task_name": "task3_sdtm_to_adam",
+  "description": "Derive ADLB analysis dataset from SDTM LB records for HbA1c primary endpoint.",
+  "cases": [
+    {
+      "case_id": "T3C1",
+      "task_description": "Derive the complete ADLB dataset for this subject. Output a JSON array with one record per visit containing: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL.",
+      "study_context": "SAP INSTRUCTION — ADLB DERIVATION (HbA1c Primary Endpoint):\n- PARAM = \"Hemoglobin A1c (HbA1c) [%]\"\n- AVAL = analysis value (copy from LBSTRESN)\n- BASE = baseline AVAL (AVAL at VISIT=SCREENING for this subject)\n- CHG = AVAL - BASE\n- PCHG = ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL = \"Y\" if VISIT = \"SCREENING\", else \"\"\n- ANL01FL = \"Y\" for post-baseline records (WEEK 12, WEEK 24), else \"\"",
+      "input_data": [
+        {"USUBJID": "CDISCPILOT01-01-001", "VISIT": "SCREENING", "LBTEST": "Hemoglobin A1c", "LBSTRESN": 8.4},
+        {"USUBJID": "CDISCPILOT01-01-001", "VISIT": "WEEK 12",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 7.8},
+        {"USUBJID": "CDISCPILOT01-01-001", "VISIT": "WEEK 24",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 7.2}
+      ],
+      "ground_truth": [
+        {"USUBJID": "CDISCPILOT01-01-001", "VISIT": "SCREENING", "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 8.4,  "BASE": 8.4, "CHG": 0.0,  "PCHG": 0.0,    "ABLFL": "Y", "ANL01FL": ""},
+        {"USUBJID": "CDISCPILOT01-01-001", "VISIT": "WEEK 12",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 7.8,  "BASE": 8.4, "CHG": -0.6, "PCHG": -7.14,  "ABLFL": "",  "ANL01FL": "Y"},
+        {"USUBJID": "CDISCPILOT01-01-001", "VISIT": "WEEK 24",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 7.2,  "BASE": 8.4, "CHG": -1.2, "PCHG": -14.29, "ABLFL": "",  "ANL01FL": "Y"}
+      ]
+    },
+    {
+      "case_id": "T3C2",
+      "task_description": "Derive the complete ADLB dataset for this subject. Output a JSON array with one record per visit containing: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL.",
+      "study_context": "SAP INSTRUCTION — ADLB DERIVATION (HbA1c Primary Endpoint):\n- PARAM = \"Hemoglobin A1c (HbA1c) [%]\"\n- AVAL = analysis value (copy from LBSTRESN)\n- BASE = baseline AVAL (AVAL at VISIT=SCREENING for this subject)\n- CHG = AVAL - BASE\n- PCHG = ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL = \"Y\" if VISIT = \"SCREENING\", else \"\"\n- ANL01FL = \"Y\" for post-baseline records (WEEK 12, WEEK 24), else \"\"",
+      "input_data": [
+        {"USUBJID": "CDISCPILOT01-01-002", "VISIT": "SCREENING", "LBTEST": "Hemoglobin A1c", "LBSTRESN": 9.1},
+        {"USUBJID": "CDISCPILOT01-01-002", "VISIT": "WEEK 12",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 8.3},
+        {"USUBJID": "CDISCPILOT01-01-002", "VISIT": "WEEK 24",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 7.9}
+      ],
+      "ground_truth": [
+        {"USUBJID": "CDISCPILOT01-01-002", "VISIT": "SCREENING", "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 9.1,  "BASE": 9.1, "CHG": 0.0,  "PCHG": 0.0,    "ABLFL": "Y", "ANL01FL": ""},
+        {"USUBJID": "CDISCPILOT01-01-002", "VISIT": "WEEK 12",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 8.3,  "BASE": 9.1, "CHG": -0.8, "PCHG": -8.79,  "ABLFL": "",  "ANL01FL": "Y"},
+        {"USUBJID": "CDISCPILOT01-01-002", "VISIT": "WEEK 24",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 7.9,  "BASE": 9.1, "CHG": -1.2, "PCHG": -13.19, "ABLFL": "",  "ANL01FL": "Y"}
+      ]
+    },
+    {
+      "case_id": "T3C3",
+      "task_description": "Derive the complete ADLB dataset for this subject. Output a JSON array with one record per visit containing: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL.",
+      "study_context": "SAP INSTRUCTION — ADLB DERIVATION (HbA1c Primary Endpoint):\n- PARAM = \"Hemoglobin A1c (HbA1c) [%]\"\n- AVAL = analysis value (copy from LBSTRESN)\n- BASE = baseline AVAL (AVAL at VISIT=SCREENING for this subject)\n- CHG = AVAL - BASE\n- PCHG = ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL = \"Y\" if VISIT = \"SCREENING\", else \"\"\n- ANL01FL = \"Y\" for post-baseline records (WEEK 12, WEEK 24), else \"\"",
+      "input_data": [
+        {"USUBJID": "CDISCPILOT01-02-003", "VISIT": "SCREENING", "LBTEST": "Hemoglobin A1c", "LBSTRESN": 7.8},
+        {"USUBJID": "CDISCPILOT01-02-003", "VISIT": "WEEK 12",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 7.5},
+        {"USUBJID": "CDISCPILOT01-02-003", "VISIT": "WEEK 24",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 7.1}
+      ],
+      "ground_truth": [
+        {"USUBJID": "CDISCPILOT01-02-003", "VISIT": "SCREENING", "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 7.8,  "BASE": 7.8, "CHG": 0.0,  "PCHG": 0.0,   "ABLFL": "Y", "ANL01FL": ""},
+        {"USUBJID": "CDISCPILOT01-02-003", "VISIT": "WEEK 12",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 7.5,  "BASE": 7.8, "CHG": -0.3, "PCHG": -3.85, "ABLFL": "",  "ANL01FL": "Y"},
+        {"USUBJID": "CDISCPILOT01-02-003", "VISIT": "WEEK 24",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 7.1,  "BASE": 7.8, "CHG": -0.7, "PCHG": -8.97, "ABLFL": "",  "ANL01FL": "Y"}
+      ]
+    },
+    {
+      "case_id": "T3C4",
+      "task_description": "Derive the complete ADLB dataset for this subject. Output a JSON array with one record per visit containing: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL.",
+      "study_context": "SAP INSTRUCTION — ADLB DERIVATION (HbA1c Primary Endpoint):\n- PARAM = \"Hemoglobin A1c (HbA1c) [%]\"\n- AVAL = analysis value (copy from LBSTRESN)\n- BASE = baseline AVAL (AVAL at VISIT=SCREENING for this subject)\n- CHG = AVAL - BASE\n- PCHG = ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL = \"Y\" if VISIT = \"SCREENING\", else \"\"\n- ANL01FL = \"Y\" for post-baseline records (WEEK 12, WEEK 24), else \"\"",
+      "input_data": [
+        {"USUBJID": "CDISCPILOT01-02-004", "VISIT": "SCREENING", "LBTEST": "Hemoglobin A1c", "LBSTRESN": 10.2},
+        {"USUBJID": "CDISCPILOT01-02-004", "VISIT": "WEEK 12",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 9.0},
+        {"USUBJID": "CDISCPILOT01-02-004", "VISIT": "WEEK 24",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 8.5}
+      ],
+      "ground_truth": [
+        {"USUBJID": "CDISCPILOT01-02-004", "VISIT": "SCREENING", "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 10.2, "BASE": 10.2, "CHG": 0.0,  "PCHG": 0.0,    "ABLFL": "Y", "ANL01FL": ""},
+        {"USUBJID": "CDISCPILOT01-02-004", "VISIT": "WEEK 12",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 9.0,  "BASE": 10.2, "CHG": -1.2, "PCHG": -11.76, "ABLFL": "",  "ANL01FL": "Y"},
+        {"USUBJID": "CDISCPILOT01-02-004", "VISIT": "WEEK 24",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 8.5,  "BASE": 10.2, "CHG": -1.7, "PCHG": -16.67, "ABLFL": "",  "ANL01FL": "Y"}
+      ]
+    },
+    {
+      "case_id": "T3C5",
+      "task_description": "Derive the complete ADLB dataset for this subject. Output a JSON array with one record per visit containing: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL.",
+      "study_context": "SAP INSTRUCTION — ADLB DERIVATION (HbA1c Primary Endpoint):\n- PARAM = \"Hemoglobin A1c (HbA1c) [%]\"\n- AVAL = analysis value (copy from LBSTRESN)\n- BASE = baseline AVAL (AVAL at VISIT=SCREENING for this subject)\n- CHG = AVAL - BASE\n- PCHG = ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL = \"Y\" if VISIT = \"SCREENING\", else \"\"\n- ANL01FL = \"Y\" for post-baseline records (WEEK 12, WEEK 24), else \"\"",
+      "input_data": [
+        {"USUBJID": "CDISCPILOT01-03-005", "VISIT": "SCREENING", "LBTEST": "Hemoglobin A1c", "LBSTRESN": 8.9},
+        {"USUBJID": "CDISCPILOT01-03-005", "VISIT": "WEEK 12",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 8.4},
+        {"USUBJID": "CDISCPILOT01-03-005", "VISIT": "WEEK 24",   "LBTEST": "Hemoglobin A1c", "LBSTRESN": 8.0}
+      ],
+      "ground_truth": [
+        {"USUBJID": "CDISCPILOT01-03-005", "VISIT": "SCREENING", "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 8.9,  "BASE": 8.9, "CHG": 0.0,  "PCHG": 0.0,    "ABLFL": "Y", "ANL01FL": ""},
+        {"USUBJID": "CDISCPILOT01-03-005", "VISIT": "WEEK 12",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 8.4,  "BASE": 8.9, "CHG": -0.5, "PCHG": -5.62,  "ABLFL": "",  "ANL01FL": "Y"},
+        {"USUBJID": "CDISCPILOT01-03-005", "VISIT": "WEEK 24",   "PARAM": "Hemoglobin A1c (HbA1c) [%]", "AVAL": 8.0,  "BASE": 8.9, "CHG": -0.9, "PCHG": -10.11, "ABLFL": "",  "ANL01FL": "Y"}
+      ]
+    }
+  ]
+}

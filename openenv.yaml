@@ -1,0 +1,21 @@
+spec_version: 1
+name: clinical_data_env
+type: space
+runtime: fastapi
+app: server.app:app
+port: 8000
+description: >
+  An OpenEnv reinforcement learning environment that trains AI agents to perform
+  clinical trial data standardization — converting raw EDC data to CDISC SDTM format
+  and deriving ADAM analysis datasets, the exact pipeline required for every FDA drug
+  submission worldwide.
+tasks:
+  - name: task1_edc_to_sdtm
+    description: Convert raw Electronic Data Capture (EDC) records to CDISC SDTM DM domain format
+    difficulty: easy
+  - name: task2_sdtm_validation
+    description: Identify CDISC controlled terminology violations in SDTM AE records and provide corrected values
+    difficulty: medium
+  - name: task3_sdtm_to_adam
+    description: Derive ADAM ADLB analysis dataset from SDTM LB records for HbA1c primary endpoint
+    difficulty: hard

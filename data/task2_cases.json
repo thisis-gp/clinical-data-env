@@ -1,0 +1,171 @@
+{
+  "task_name": "task2_sdtm_validation",
+  "description": "Identify all CDISC CT violations in submitted SDTM AE records and provide corrected values.",
+  "cases": [
+    {
+      "case_id": "T2C1",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-01-001",
+        "AETERM": "nausea",
+        "AEDECOD": "Nausea",
+        "AESTDTC": "06-15-2024",
+        "AEENDTC": "2024-06-18",
+        "AESEV": "Moderate",
+        "AESER": "No",
+        "AEREL": "RELATED",
+        "AEOUT": "Resolved"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2024-06-15"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Not CDISC CT — must be uppercase MODERATE",
+            "corrected_value": "MODERATE"
+          },
+          {
+            "field": "AESER",
+            "issue": "Not CDISC CT — must be Y or N, not 'No'",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Not CDISC CT — must be RECOVERED/RESOLVED",
+            "corrected_value": "RECOVERED/RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T2C2",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-01-002",
+        "AETERM": "headache",
+        "AEDECOD": "Headache",
+        "AESTDTC": "2024-07-10",
+        "AEENDTC": "2024-07-12",
+        "AESEV": "MILD",
+        "AESER": "yes",
+        "AEREL": "Unrelated",
+        "AEOUT": "FATAL"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESER",
+            "issue": "Not CDISC CT — must be Y or N, not 'yes'",
+            "corrected_value": "Y"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Not CDISC CT — must be NOT RELATED",
+            "corrected_value": "NOT RELATED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T2C3",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-02-003",
+        "AETERM": "dizziness",
+        "AEDECOD": "Dizziness",
+        "AESTDTC": "July 1, 2024",
+        "AEENDTC": "2024-07-05",
+        "AESEV": "severe",
+        "AESER": "Y",
+        "AEREL": "Not Related",
+        "AEOUT": "UNKNOWN"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2024-07-01"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Not CDISC CT — must be uppercase SEVERE",
+            "corrected_value": "SEVERE"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Not CDISC CT — must be NOT RELATED (all uppercase)",
+            "corrected_value": "NOT RELATED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T2C4",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-02-004",
+        "AETERM": "fatigue",
+        "AEDECOD": "Fatigue",
+        "AESTDTC": "2024/08/15",
+        "AEENDTC": "2024-08-20",
+        "AESEV": "MODERATE",
+        "AESER": "N",
+        "AEREL": "NOT RELATED",
+        "AEOUT": "Recovered/Resolved"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date uses slashes instead of hyphens — must be YYYY-MM-DD",
+            "corrected_value": "2024-08-15"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Not CDISC CT — must be uppercase RECOVERED/RESOLVED",
+            "corrected_value": "RECOVERED/RESOLVED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T2C5",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-03-005",
+        "AETERM": "hypoglycemia",
+        "AEDECOD": "Hypoglycaemia",
+        "AESTDTC": "2024-09-01",
+        "AEENDTC": "2024-09-01",
+        "AESEV": "MODERATE",
+        "AESER": "TRUE",
+        "AEREL": "related",
+        "AEOUT": "NOT RECOVERED/NOT RESOLVED"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESER",
+            "issue": "Not CDISC CT — must be Y or N, not 'TRUE'",
+            "corrected_value": "Y"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Not CDISC CT — must be uppercase RELATED",
+            "corrected_value": "RELATED"
+          }
+        ]
+      }
+    }
+  ]
+}
