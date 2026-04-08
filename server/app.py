@@ -59,10 +59,4 @@ def main(host: str | None = None, port: int | None = None):
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--port", type=int, default=None)
-    parser.add_argument("--host", type=str, default=None)
-    args = parser.parse_args()
-    main(host=args.host, port=args.port)
+    main()
