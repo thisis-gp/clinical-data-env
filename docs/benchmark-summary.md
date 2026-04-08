@@ -14,7 +14,7 @@ This project now supports two benchmark sets:
 | Benchmark Set | Model | Task 1 | Task 2 | Task 3 | Overall |
 |---|---|---:|---:|---:|---:|
 | `toy` | `Qwen/Qwen2.5-72B-Instruct` | 0.9600 | 1.0000 | 1.0000 | 0.9867 |
-| `pharmaverse` | `Qwen/Qwen2.5-72B-Instruct` | 0.7867 | 0.8667 | 0.8683 | 0.8406 |
+| `pharmaverse` | `Qwen/Qwen2.5-72B-Instruct` | 1.0000 | 0.9709 | 0.8683 | 0.9464 |
 
 ## Interpretation
 
