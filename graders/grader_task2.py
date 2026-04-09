@@ -2,10 +2,15 @@
 Task 2 Grader: SDTM AE validation — violation detection + correction.
 
 Score = 0.5 * F1(violation detection) + 0.5 * correction_accuracy
-Score range: 0.0 – 1.0
+Score range: strictly (0.0, 1.0) — never exactly 0 or 1.
 """
 
 from typing import Any
+
+
+def _clamp(score: float) -> float:
+    """Clamp score to strictly open interval (0, 1)."""
+    return max(0.01, min(0.99, score))
 
 
 def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str]:
@@ -28,7 +33,7 @@ def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str]:
     elif isinstance(agent_output, list):
         agent_violations = agent_output
     else:
-        return 0.0, f"Expected a JSON object with 'violations' key, got {type(agent_output).__name__}."
+        return _clamp(0.0), f"Expected a JSON object with 'violations' key, got {type(agent_output).__name__}."
 
     gt_fields = {v["field"] for v in gt_violations}
     agent_fields = {v["field"] for v in agent_violations if isinstance(v, dict) and "field" in v}
@@ -36,10 +41,10 @@ def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str]:
     # Special case: ground truth has no violations
     if not gt_violations:
         if not agent_violations:
-            return 1.0, "Score: 1.00. Correctly identified no violations in this record."
+            return _clamp(1.0), "Score: 0.99. Correctly identified no violations in this record."
         fp_count = len(agent_violations)
         penalty = min(fp_count * 0.25, 1.0)
-        score = round(max(0.0, 1.0 - penalty), 4)
+        score = _clamp(round(max(0.0, 1.0 - penalty), 4))
         fp_fields = [v.get("field", "?") for v in agent_violations if isinstance(v, dict)]
         return score, (
             f"Score: {score:.2f}. This record has NO violations — all fields conform to SDTM. "
@@ -65,7 +70,7 @@ def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str]:
     )
     correction_score = correct_fixes / len(gt_fields) if gt_fields else 0.0
 
-    score = round(0.5 * f1 + 0.5 * correction_score, 4)
+    score = _clamp(round(0.5 * f1 + 0.5 * correction_score, 4))
 
     # Build feedback
     missed = gt_fields - agent_fields

@@ -3,13 +3,18 @@ Task 1 Grader: Raw EDC → SDTM DM mapping.
 
 Scores field-by-field match against ground truth.
 Penalises hallucinated extra fields not in the spec.
-Score range: 0.0 – 1.0
+Score range: strictly (0.0, 1.0) — never exactly 0 or 1.
 """
 
 from typing import Any
 
 
 EXPECTED_FIELDS = {"USUBJID", "AGE", "SEX", "RACE", "RFSTDTC", "COUNTRY"}
+
+
+def _clamp(score: float) -> float:
+    """Clamp score to strictly open interval (0, 1)."""
+    return max(0.01, min(0.99, score))
 
 
 def grade_task1(agent_output: Any, ground_truth: dict) -> tuple[float, str]:
@@ -24,7 +29,7 @@ def grade_task1(agent_output: Any, ground_truth: dict) -> tuple[float, str]:
         Tuple of (score 0.0–1.0, feedback string).
     """
     if not isinstance(agent_output, dict):
-        return 0.0, f"Expected a JSON object, got {type(agent_output).__name__}."
+        return _clamp(0.0), f"Expected a JSON object, got {type(agent_output).__name__}."
 
     correct = 0
     total = len(ground_truth)
@@ -45,7 +50,7 @@ def grade_task1(agent_output: Any, ground_truth: dict) -> tuple[float, str]:
     penalty = min(len(extra_fields) * 0.05, 0.2)  # cap penalty at 0.2
 
     base_score = correct / total if total > 0 else 0.0
-    score = max(0.0, round(base_score - penalty, 4))
+    score = _clamp(max(0.0, round(base_score - penalty, 4)))
 
     if feedback_lines:
         feedback = f"Score: {score:.2f}. Incorrect fields:\n" + "\n".join(feedback_lines)

@@ -2,10 +2,15 @@
 Task 3 Grader: SDTM LB → ADAM ADLB derivation.
 
 Scores numeric fields within tolerance and exact-match string fields.
-Score range: 0.0 – 1.0
+Score range: strictly (0.0, 1.0) — never exactly 0 or 1.
 """
 
 from typing import Any
+
+
+def _clamp(score: float) -> float:
+    """Clamp score to strictly open interval (0, 1)."""
+    return max(0.01, min(0.99, score))
 
 
 NUMERIC_FIELDS = ["AVAL", "BASE", "CHG", "PCHG"]
@@ -25,7 +30,7 @@ def grade_task3(agent_records: Any, ground_truth_records: list) -> tuple[float, 
         Tuple of (score 0.0–1.0, feedback string).
     """
     if not isinstance(agent_records, list):
-        return 0.0, f"Expected a JSON array, got {type(agent_records).__name__}."
+        return _clamp(0.0), f"Expected a JSON array, got {type(agent_records).__name__}."
 
     total = 0
     correct = 0
@@ -70,7 +75,7 @@ def grade_task3(agent_records: Any, ground_truth_records: list) -> tuple[float, 
                     f"  {visit}.{field}: expected {expected_val!r}, got {agent_val!r}"
                 )
 
-    score = round(correct / total, 4) if total > 0 else 0.0
+    score = _clamp(round(correct / total, 4) if total > 0 else 0.0)
 
     if feedback_lines:
         feedback = f"Score: {score:.2f}. Issues:\n" + "\n".join(feedback_lines)
