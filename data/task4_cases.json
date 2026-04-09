@@ -1,0 +1,126 @@
+{
+  "task_name": "task4_cross_domain_validation",
+  "description": "Identify cross-domain SDTM inconsistencies across DM, EX, CM, AE, and DS domains.",
+  "cases": [
+    {
+      "case_id": "T4C1",
+      "difficulty": "easy",
+      "task_description": "Review the SDTM records below from three domains for subject 01-01-001. Identify any cross-domain inconsistencies. Return a JSON object with key 'issues': a list of issues found. Each issue must have: 'type' (string identifier), 'domain' (affected domain), 'field' (specific field), 'description' (explanation). If no issues exist, return {'issues': []}.",
+      "study_context": "STUDY: CDISCPILOT01\n\nCROSS-DOMAIN CONSISTENCY RULES:\n1. DM/EX DATE RULE: RFSTDTC in DM (date of first study treatment) must exactly match EXSTDTC of the subject's first EX record (first dose of investigational product).\n2. CM TEMPORAL RULE: Any concomitant medication listed in CM with CMCAT='PROHIBITED' must NOT have CMSTDTC before RFSTDTC (first dose). A prohibited medication started before first dose is a protocol deviation.\n3. SAE CONSISTENCY RULE: Any AE record with AESER='Y' must have a corresponding record in DS where DSTERM contains 'SERIOUS' or DSDECOD='STUDY DISCONTINUATION DUE TO AE'. An AE with AESER=Y and no DS record is an orphan SAE.",
+      "input_data": {
+        "DM": {"USUBJID": "01-01-001", "RFSTDTC": "2024-03-15", "SEX": "M", "RACE": "WHITE"},
+        "EX": [{"USUBJID": "01-01-001", "EXSTDTC": "2024-03-20", "EXTRT": "STUDY DRUG", "EXDOSE": 100}],
+        "CM": [],
+        "AE": [],
+        "DS": []
+      },
+      "ground_truth": {
+        "issues": [
+          {
+            "type": "dm_ex_date_mismatch",
+            "domain": "DM/EX",
+            "field": "RFSTDTC/EXSTDTC",
+            "description": "DM.RFSTDTC (2024-03-15) does not match EX.EXSTDTC of first dose (2024-03-20). First dose date must match reference start date."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T4C2",
+      "difficulty": "easy",
+      "task_description": "Review the SDTM records below from three domains for subject 01-01-002. Identify any cross-domain inconsistencies. Return a JSON object with key 'issues': a list of issues found. Each issue must have: 'type', 'domain', 'field', 'description'. If no issues exist, return {'issues': []}.",
+      "study_context": "STUDY: CDISCPILOT01\n\nCROSS-DOMAIN CONSISTENCY RULES:\n1. DM/EX DATE RULE: RFSTDTC in DM must exactly match EXSTDTC of the subject's first EX record.\n2. CM TEMPORAL RULE: Any CM record with CMCAT='PROHIBITED' must NOT have CMSTDTC before RFSTDTC.\n3. SAE CONSISTENCY RULE: Any AE with AESER='Y' must have a corresponding DS record.",
+      "input_data": {
+        "DM": {"USUBJID": "01-01-002", "RFSTDTC": "2024-04-01", "SEX": "F", "RACE": "ASIAN"},
+        "EX": [{"USUBJID": "01-01-002", "EXSTDTC": "2024-04-01", "EXTRT": "STUDY DRUG", "EXDOSE": 100}],
+        "CM": [{"USUBJID": "01-01-002", "CMTRT": "Metformin", "CMCAT": "PROHIBITED", "CMSTDTC": "2024-03-15"}],
+        "AE": [],
+        "DS": []
+      },
+      "ground_truth": {
+        "issues": [
+          {
+            "type": "prohibited_cm_before_first_dose",
+            "domain": "CM",
+            "field": "CMSTDTC",
+            "description": "CM record for Metformin (CMCAT=PROHIBITED) has CMSTDTC (2024-03-15) before RFSTDTC (2024-04-01). Prohibited medication was active before first dose — protocol deviation."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T4C3",
+      "difficulty": "medium",
+      "task_description": "Review the SDTM records below for subject 01-02-003. Identify any cross-domain inconsistencies. Return {'issues': [...]} with each issue having 'type', 'domain', 'field', 'description'.",
+      "study_context": "STUDY: CDISCPILOT01\n\nCROSS-DOMAIN CONSISTENCY RULES:\n1. DM/EX DATE RULE: RFSTDTC in DM must exactly match EXSTDTC of the subject's first EX record.\n2. CM TEMPORAL RULE: Any CM record with CMCAT='PROHIBITED' must NOT have CMSTDTC before RFSTDTC.\n3. SAE CONSISTENCY RULE: Any AE with AESER='Y' must have a corresponding DS record with DSTERM containing 'SERIOUS' or DSDECOD='STUDY DISCONTINUATION DUE TO AE'.",
+      "input_data": {
+        "DM": {"USUBJID": "01-02-003", "RFSTDTC": "2024-05-10", "SEX": "M", "RACE": "WHITE"},
+        "EX": [{"USUBJID": "01-02-003", "EXSTDTC": "2024-05-10", "EXTRT": "STUDY DRUG", "EXDOSE": 50}],
+        "CM": [],
+        "AE": [{"USUBJID": "01-02-003", "AETERM": "Myocardial infarction", "AESER": "Y", "AESTDTC": "2024-06-01"}],
+        "DS": []
+      },
+      "ground_truth": {
+        "issues": [
+          {
+            "type": "orphan_sae",
+            "domain": "AE/DS",
+            "field": "AESER",
+            "description": "AE record for 'Myocardial infarction' has AESER=Y but no corresponding DS record exists. Serious adverse events require a disposition record."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T4C4",
+      "difficulty": "medium",
+      "task_description": "Review the SDTM records below for subject 01-02-004. Identify ALL cross-domain inconsistencies. Return {'issues': [...]}.",
+      "study_context": "STUDY: CDISCPILOT01\n\nCROSS-DOMAIN CONSISTENCY RULES:\n1. DM/EX DATE RULE: RFSTDTC in DM must exactly match EXSTDTC of the subject's first EX record.\n2. CM TEMPORAL RULE: Any CM record with CMCAT='PROHIBITED' must NOT have CMSTDTC before RFSTDTC.\n3. SAE CONSISTENCY RULE: Any AE with AESER='Y' must have a corresponding DS record.",
+      "input_data": {
+        "DM": {"USUBJID": "01-02-004", "RFSTDTC": "2024-06-01", "SEX": "F", "RACE": "BLACK OR AFRICAN AMERICAN"},
+        "EX": [{"USUBJID": "01-02-004", "EXSTDTC": "2024-06-01", "EXTRT": "STUDY DRUG", "EXDOSE": 100}],
+        "CM": [{"USUBJID": "01-02-004", "CMTRT": "Sitagliptin", "CMCAT": "PROHIBITED", "CMSTDTC": "2024-05-20"}],
+        "AE": [{"USUBJID": "01-02-004", "AETERM": "Severe hypoglycemia", "AESER": "Y", "AESTDTC": "2024-07-15"}],
+        "DS": []
+      },
+      "ground_truth": {
+        "issues": [
+          {
+            "type": "prohibited_cm_before_first_dose",
+            "domain": "CM",
+            "field": "CMSTDTC",
+            "description": "Sitagliptin (CMCAT=PROHIBITED) CMSTDTC (2024-05-20) is before RFSTDTC (2024-06-01) — protocol deviation."
+          },
+          {
+            "type": "orphan_sae",
+            "domain": "AE/DS",
+            "field": "AESER",
+            "description": "AE 'Severe hypoglycemia' has AESER=Y but no corresponding DS record exists."
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T4C5",
+      "difficulty": "hard",
+      "task_description": "Review the SDTM records below for subject 01-03-005. Identify ALL cross-domain inconsistencies. Return {'issues': [...]}. If all records are consistent, return {'issues': []}.",
+      "study_context": "STUDY: CDISCPILOT01\n\nCROSS-DOMAIN CONSISTENCY RULES:\n1. DM/EX DATE RULE: RFSTDTC in DM must exactly match EXSTDTC of the subject's first EX record (lowest EXSTDTC when multiple EX records exist).\n2. CM TEMPORAL RULE: CMCAT='PROHIBITED' records must NOT have CMSTDTC before RFSTDTC.\n3. SAE CONSISTENCY RULE: AESER='Y' requires corresponding DS record.\n\nNOTE: This subject has multiple EX records. Use the earliest EXSTDTC as the reference first dose date.",
+      "input_data": {
+        "DM": {"USUBJID": "01-03-005", "RFSTDTC": "2024-07-01", "SEX": "M", "RACE": "ASIAN"},
+        "EX": [
+          {"USUBJID": "01-03-005", "EXSTDTC": "2024-07-01", "EXTRT": "STUDY DRUG", "EXDOSE": 100},
+          {"USUBJID": "01-03-005", "EXSTDTC": "2024-07-15", "EXTRT": "STUDY DRUG", "EXDOSE": 100}
+        ],
+        "CM": [{"USUBJID": "01-03-005", "CMTRT": "Insulin", "CMCAT": "PROHIBITED", "CMSTDTC": "2024-07-10"}],
+        "AE": [
+          {"USUBJID": "01-03-005", "AETERM": "Nausea", "AESER": "N", "AESTDTC": "2024-07-05"},
+          {"USUBJID": "01-03-005", "AETERM": "Severe kidney injury", "AESER": "Y", "AESTDTC": "2024-08-01"}
+        ],
+        "DS": [{"USUBJID": "01-03-005", "DSTERM": "SERIOUS ADVERSE EVENT", "DSDECOD": "STUDY DISCONTINUATION DUE TO AE"}]
+      },
+      "ground_truth": {
+        "issues": []
+      }
+    }
+  ]
+}

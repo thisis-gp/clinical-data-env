@@ -1,7 +1,7 @@
 """
 Baseline inference script for the Clinical Data Standardization Environment.
 
-Runs an LLM agent against all 3 tasks via the OpenEnv WebSocket API and emits
+Runs an LLM agent against all 4 tasks via the OpenEnv WebSocket API and emits
 structured logs in the exact format required by the OpenEnv hackathon:
 
     [START] task=<task_name> env=<benchmark> model=<model_name>
@@ -44,11 +44,14 @@ BENCHMARK_SET = os.getenv("BENCHMARK_SET", "toy").strip().lower()
 PROJECT_ROOT = Path(__file__).resolve().parent
 PACKAGE_ROOT = PROJECT_ROOT.parent
 LOGS_DIR = PROJECT_ROOT / "logs"
+SUBMISSION_SCORE_FLOOR = 0.01
+SUBMISSION_SCORE_CAP = 0.99
 
 TASK_NAMES = [
     "task1_edc_to_sdtm",
     "task2_sdtm_validation",
     "task3_sdtm_to_adam",
+    "task4_cross_domain_validation",
 ]
 
 SYSTEM_PROMPT = """You are a clinical data standardization expert trained in CDISC standards.
@@ -58,7 +61,7 @@ You must respond with ONLY a valid JSON object (no markdown, no explanation outs
 
 Your JSON must have this exact structure:
 {
-  "task_id": <1, 2, or 3>,
+  "task_id": <1, 2, 3, or 4>,
   "output_data": <your answer - see task description for required format>,
   "reasoning": "<brief explanation of your choices>"
 }
@@ -68,11 +71,18 @@ For Task 2 (Validation): output_data is {"violations": [{"field":"...","issue":"
   IMPORTANT: If the record has NO violations, return {"violations": []} — an empty list.
   Not every record is wrong. Only flag fields that genuinely violate SDTM conventions.
 For Task 3 (ADAM derivation): output_data is a JSON array of ADAM records, one per visit.
+For Task 4 (Cross-domain validation): output_data is {"issues": [{"type":"...","domain":"...","field":"...","description":"..."},...]}
+  IMPORTANT: If no cross-domain inconsistencies exist, return {"issues": []}.
 
 If this is a RETRY (attempt > 1), you will receive feedback from your previous answer.
 Read the feedback carefully and correct only the specific errors identified.
 
 Return ONLY the JSON object. No markdown code blocks."""
+
+
+def _submission_safe_score(score: float) -> float:
+    """Keep logged task scores strictly inside (0, 1) for hackathon validation."""
+    return min(max(float(score), SUBMISSION_SCORE_FLOOR), SUBMISSION_SCORE_CAP)
 
 
 class TeeStream:
@@ -320,7 +330,7 @@ def run_episode(env, task_name: str, ClinicalAction) -> tuple[bool, int, float, 
             flush=True,
         )
 
-    final_score = sum(rewards) / len(rewards) if rewards else 0.0
+    final_score = _submission_safe_score(sum(rewards) / len(rewards) if rewards else SUBMISSION_SCORE_FLOOR)
     rewards_str = ",".join(f"{r:.2f}" for r in rewards)
 
     print(
@@ -368,7 +378,7 @@ def main() -> None:
                     all_scores.append(score)
                 except Exception:
                     traceback.print_exc(file=sys.stderr)
-                    all_scores.append(0.0)
+                    all_scores.append(SUBMISSION_SCORE_FLOOR)
 
         overall = sum(all_scores) / len(all_scores) if all_scores else 0.0
         print(f"\nOverall score: {overall:.4f}", flush=True)
