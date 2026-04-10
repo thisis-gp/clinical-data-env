@@ -9,10 +9,11 @@ structured logs in the exact format required by the OpenEnv hackathon:
     [END]   success=<true|false> steps=<n> score=<score> rewards=<r1,r2,...,rn>
 
 Environment variables:
-    API_BASE_URL  - LLM API endpoint  (default: https://router.huggingface.co/v1)
-    MODEL_NAME    - Model identifier  (default: Qwen/Qwen2.5-72B-Instruct)
-    HF_TOKEN      - API key (checked first), fallback: API_KEY
-    ENV_BASE_URL  - OpenEnv server URL (default: http://localhost:8000)
+    API_BASE_URL    - LLM API endpoint  (default: https://router.huggingface.co/v1)
+    MODEL_NAME      - Model identifier  (default: Qwen/Qwen2.5-72B-Instruct)
+    HF_TOKEN        - API key (checked first), fallback: API_KEY
+    ENV_BASE_URL    - OpenEnv server URL (default: http://localhost:8000)
+    INFERENCE_TASKS - Comma-separated task ids or names to run (default: all)
 
 Usage:
     python inference.py
@@ -20,8 +21,11 @@ Usage:
 
 import json
 import os
+import re
 import sys
+import time
 import traceback
+from argparse import ArgumentParser
 from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
@@ -46,6 +50,8 @@ PACKAGE_ROOT = PROJECT_ROOT.parent
 LOGS_DIR = PROJECT_ROOT / "logs"
 SUBMISSION_SCORE_FLOOR = 0.01
 SUBMISSION_SCORE_CAP = 0.99
+RATE_LIMIT_MAX_RETRIES = int(os.getenv("RATE_LIMIT_MAX_RETRIES", "2"))
+REQUEST_DELAY_SECONDS = float(os.getenv("REQUEST_DELAY_SECONDS", "0"))
 
 TASK_NAMES = [
     "task1_edc_to_sdtm",
@@ -53,6 +59,28 @@ TASK_NAMES = [
     "task3_sdtm_to_adam",
     "task4_cross_domain_validation",
 ]
+TASK_ALIASES = {
+    "1": TASK_NAMES[0],
+    "task1": TASK_NAMES[0],
+    TASK_NAMES[0]: TASK_NAMES[0],
+    "2": TASK_NAMES[1],
+    "task2": TASK_NAMES[1],
+    TASK_NAMES[1]: TASK_NAMES[1],
+    "3": TASK_NAMES[2],
+    "task3": TASK_NAMES[2],
+    TASK_NAMES[2]: TASK_NAMES[2],
+    "4": TASK_NAMES[3],
+    "task4": TASK_NAMES[3],
+    TASK_NAMES[3]: TASK_NAMES[3],
+}
+GROQ_LOCAL_DEV_DELAYS = {
+    "llama-3.3-70b-versatile": 1.0,
+    "openai/gpt-oss-120b": 1.5,
+    "openai/gpt-oss-20b": 2.0,
+    "qwen/qwen3-32b": 2.5,
+    "llama-3.1-8b-instant": 0.5,
+    "meta-llama/llama-4-scout-17b-16e-instruct": 1.0,
+}
 
 SYSTEM_PROMPT = """You are a clinical data standardization expert trained in CDISC standards.
 
@@ -73,6 +101,14 @@ For Task 2 (Validation): output_data is {"violations": [{"field":"...","issue":"
 For Task 3 (ADAM derivation): output_data is a JSON array of ADAM records, one per visit.
 For Task 4 (Cross-domain validation): output_data is {"issues": [{"type":"...","domain":"...","field":"...","description":"..."},...]}
   IMPORTANT: If no cross-domain inconsistencies exist, return {"issues": []}.
+  Use these canonical issue types whenever applicable:
+    - "dm_ex_date_mismatch" for RFSTDTC vs earliest EXSTDTC mismatch
+    - "prohibited_cm_before_first_dose" for prohibited CM starting before first dose
+    - "orphan_sae" for AESER='Y' without matching DS support
+  Prefer these canonical domains and fields:
+    - "DM/EX" with field "RFSTDTC/EXSTDTC"
+    - "CM" with field "CMSTDTC"
+    - "AE/DS" with field "AESER"
 
 If this is a RETRY (attempt > 1), you will receive feedback from your previous answer.
 Read the feedback carefully and correct only the specific errors identified.
@@ -83,6 +119,72 @@ Return ONLY the JSON object. No markdown code blocks."""
 def _submission_safe_score(score: float) -> float:
     """Keep logged task scores strictly inside (0, 1) for hackathon validation."""
     return min(max(float(score), SUBMISSION_SCORE_FLOOR), SUBMISSION_SCORE_CAP)
+
+
+def groq_local_dev_delay(model_name: str) -> float:
+    """Return a conservative per-request delay for local Groq benchmarking."""
+    if REQUEST_DELAY_SECONDS > 0:
+        return REQUEST_DELAY_SECONDS
+    return GROQ_LOCAL_DEV_DELAYS.get(model_name, 0.0)
+
+
+def parse_retry_after_seconds(exc: Exception) -> float | None:
+    """Best-effort extraction of a retry window from provider errors."""
+    retry_after = getattr(exc, "response", None)
+    if retry_after is not None:
+        headers = getattr(retry_after, "headers", {}) or {}
+        raw_header = headers.get("retry-after")
+        if raw_header:
+            try:
+                return float(raw_header)
+            except ValueError:
+                pass
+
+    message = str(exc)
+    matches = [
+        re.search(r"try again in ([0-9]+(?:\.[0-9]+)?)s", message, re.IGNORECASE),
+        re.search(r"retry-after['\"]?\s*[:=]\s*([0-9]+(?:\.[0-9]+)?)", message, re.IGNORECASE),
+    ]
+    for match in matches:
+        if match:
+            return float(match.group(1))
+    return None
+
+
+def parse_task_selection(raw_selection: str | None) -> list[str]:
+    """Return the ordered list of tasks to run from a user/env selection string."""
+    if not raw_selection or raw_selection.strip().lower() in {"all", "*"}:
+        return list(TASK_NAMES)
+
+    selected_tasks: list[str] = []
+    seen: set[str] = set()
+    for token in raw_selection.split(","):
+        normalized = token.strip().lower()
+        if not normalized:
+            continue
+        task_name = TASK_ALIASES.get(normalized)
+        if not task_name:
+            valid = ", ".join(TASK_NAMES)
+            raise ValueError(
+                f"Unknown task selection '{token.strip()}'. Use task ids 1-4 or names: {valid}."
+            )
+        if task_name not in seen:
+            selected_tasks.append(task_name)
+            seen.add(task_name)
+
+    if not selected_tasks:
+        raise ValueError("Task selection resolved to an empty task list.")
+
+    return selected_tasks
+
+
+def build_log_suffix(selected_tasks: list[str]) -> str:
+    """Build a readable log-name suffix for full or partial benchmark runs."""
+    if selected_tasks == TASK_NAMES:
+        return BENCHMARK_SET
+
+    short_names = [task_name.replace("task", "t").replace("_", "-") for task_name in selected_tasks]
+    return f"{BENCHMARK_SET}-{'-'.join(short_names)}"
 
 
 class TeeStream:
@@ -192,15 +294,32 @@ def call_llm(obs_data: dict) -> dict:
                 f"  {json.dumps(prev_output, separators=(',', ':'))}\n"
             )
 
-    response = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_content},
-        ],
-        temperature=0.1,
-        max_tokens=2048,
-    )
+    request_delay = groq_local_dev_delay(MODEL_NAME) if "api.groq.com" in API_BASE_URL else REQUEST_DELAY_SECONDS
+    last_exc = None
+
+    for attempt in range(RATE_LIMIT_MAX_RETRIES + 1):
+        try:
+            if request_delay > 0:
+                time.sleep(request_delay)
+
+            response = client.chat.completions.create(
+                model=MODEL_NAME,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": user_content},
+                ],
+                temperature=0.1,
+                max_tokens=2048,
+            )
+            break
+        except Exception as exc:
+            last_exc = exc
+            retry_after = parse_retry_after_seconds(exc)
+            if retry_after is None or attempt >= RATE_LIMIT_MAX_RETRIES or "429" not in str(exc):
+                raise
+            time.sleep(retry_after + 0.5)
+    else:
+        raise last_exc  # pragma: no cover
 
     raw = response.choices[0].message.content.strip()
 
@@ -225,7 +344,7 @@ def call_llm(obs_data: dict) -> dict:
 # Episode runner
 # ---------------------------------------------------------------------------
 
-def run_episode(env, task_name: str, ClinicalAction) -> tuple[bool, int, float, list[float]]:
+def run_episode(env, task_name: str, ClinicalAction, initial_result=None) -> tuple[bool, int, float, list[float]]:
     """
     Run one full episode (one task, 5 cases) via an existing WebSocket session.
 
@@ -242,13 +361,8 @@ def run_episode(env, task_name: str, ClinicalAction) -> tuple[bool, int, float, 
     )
 
     try:
-        result = env.reset()
+        result = initial_result if initial_result is not None else reset_to_task(env, task_name)
         obs = result.observation
-
-        if obs.task_name != task_name:
-            raise RuntimeError(
-                f"Task mismatch after reset: expected {task_name}, got {obs.task_name}"
-            )
 
         while True:
             if result.done:
@@ -373,9 +487,35 @@ def run_episode(env, task_name: str, ClinicalAction) -> tuple[bool, int, float, 
     return success, step_num, final_score, rewards
 
 
+def reset_to_task(env, task_name: str):
+    """Cycle environment resets until the requested task is active."""
+    attempts_remaining = len(TASK_NAMES)
+    last_observation = None
+
+    for _ in range(attempts_remaining):
+        result = env.reset()
+        observation = result.observation
+        last_observation = observation
+        if observation.task_name == task_name:
+            return result
+
+    got = getattr(last_observation, "task_name", "unknown")
+    raise RuntimeError(f"Task mismatch after reset cycle: expected {task_name}, got {got}")
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
+def parse_args() -> ArgumentParser:
+    parser = ArgumentParser(description="Run LLM inference against the clinical data environment.")
+    parser.add_argument(
+        "--tasks",
+        default=os.getenv("INFERENCE_TASKS", "all"),
+        help="Comma-separated task ids or names to run, e.g. 'task4' or '1,2,4'.",
+    )
+    return parser
+
 
 def main() -> None:
     if not API_KEY:
@@ -385,13 +525,16 @@ def main() -> None:
         )
         sys.exit(1)
 
+    args = parse_args().parse_args()
+    selected_tasks = parse_task_selection(args.tasks)
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    log_path = LOGS_DIR / f"inference-{BENCHMARK_SET}-{timestamp}.log"
+    log_label = build_log_suffix(selected_tasks)
+    log_path = LOGS_DIR / f"inference-{log_label}-{timestamp}.log"
 
     with tee_output(log_path):
         print(
             f"[RUN]   env={ENV_NAME} benchmark_set={BENCHMARK_SET} "
-            f"env_base_url={ENV_BASE_URL} model={MODEL_NAME}",
+            f"env_base_url={ENV_BASE_URL} model={MODEL_NAME} tasks={','.join(selected_tasks)}",
             flush=True,
         )
         print(f"[LOG]   path={log_path}", flush=True)
@@ -401,9 +544,10 @@ def main() -> None:
         ClinicalDataEnv, ClinicalAction = _import_runtime_types()
 
         with ClinicalDataEnv(base_url=ENV_BASE_URL).sync() as env:
-            for task_name in TASK_NAMES:
+            for task_name in selected_tasks:
                 try:
-                    _, _, score, _ = run_episode(env, task_name, ClinicalAction)
+                    initial_result = reset_to_task(env, task_name)
+                    _, _, score, _ = run_episode(env, task_name, ClinicalAction, initial_result=initial_result)
                     all_scores.append(score)
                 except Exception:
                     traceback.print_exc(file=sys.stderr)

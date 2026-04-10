@@ -2,14 +2,96 @@
 Task 4 Grader: Cross-domain SDTM consistency validation.
 
 Checks cross-domain inconsistencies across DM, EX, CM, AE, and DS domains.
+Uses canonical issue labels but also tolerates common near-miss phrasing so
+the grader measures reasoning quality, not only literal string matching.
 """
 
 from typing import Any
 
 
+TYPE_ALIASES = {
+    "dm_ex_date_mismatch": {
+        "dm_ex_date_mismatch",
+        "dm/ex date mismatch",
+        "dm ex date mismatch",
+        "date mismatch",
+        "first dose date mismatch",
+        "rfstdtc exstdtc mismatch",
+        "inconsistency",
+    },
+    "prohibited_cm_before_first_dose": {
+        "prohibited_cm_before_first_dose",
+        "prohibited medication start date",
+        "prohibited cm before first dose",
+        "prohibited medication before first dose",
+        "cm before first dose",
+        "prohibited concomitant medication before first dose",
+        "inconsistent cm record",
+        "inconsistency",
+    },
+    "orphan_sae": {
+        "orphan_sae",
+        "orphan sae",
+        "serious ae without ds",
+        "sae without ds",
+        "ae ds inconsistency",
+        "serious adverse event missing ds",
+        "inconsistency",
+    },
+}
+
+DOMAIN_ALIASES = {
+    "DM/EX": {"DM/EX", "DM AND EX", "DM VS EX", "DM-EX"},
+    "CM": {"CM", "CM/EX", "CM VS EX", "CM-EX"},
+    "AE/DS": {"AE/DS", "AE AND DS", "AE VS DS", "AE-DS", "AE", "DS"},
+}
+
+FIELD_ALIASES = {
+    "RFSTDTC/EXSTDTC": {"RFSTDTC/EXSTDTC", "RFSTDTC AND EXSTDTC", "RFSTDTC VS EXSTDTC", "RFSTDTC-EXSTDTC"},
+    "CMSTDTC": {"CMSTDTC", "CMSTDTC/EXSTDTC", "CMSTDTC VS EXSTDTC", "CMSTDTC-EXSTDTC"},
+    "AESER": {"AESER", "AETERM", "DSDECOD", "DSTERM"},
+}
+
+
 def _clamp(score: float) -> float:
     """Clamp score to strictly open interval (0, 1)."""
     return max(0.01, min(0.99, score))
+
+
+def _normalize(text: str) -> str:
+    normalized = str(text).strip().upper()
+    for old, new in {"/": " ", "-": " ", "_": " "}.items():
+        normalized = normalized.replace(old, new)
+    return " ".join(normalized.split())
+
+
+def _canonical_issue_type(issue_type: str, description: str = "") -> str:
+    combined = f"{issue_type} {description}"
+    normalized = _normalize(combined)
+    for canonical, aliases in TYPE_ALIASES.items():
+        if any(_normalize(alias) in normalized for alias in aliases):
+            return canonical
+    return _normalize(issue_type).lower().replace(" ", "_")
+
+
+def _matches_domain(expected: str, actual_domain: str, actual_desc: str) -> bool:
+    expected_norm = _normalize(expected)
+    actual_text = f"{actual_domain} {actual_desc}"
+    actual_norm = _normalize(actual_text)
+    aliases = DOMAIN_ALIASES.get(expected.upper(), {expected})
+    return any(_normalize(alias) in actual_norm for alias in aliases)
+
+
+def _matches_field(expected: str, actual_field: str, actual_desc: str) -> bool:
+    expected_norm = _normalize(expected)
+    actual_text = f"{actual_field} {actual_desc}"
+    actual_norm = _normalize(actual_text)
+    aliases = FIELD_ALIASES.get(expected.upper(), {expected})
+    if any(_normalize(alias) in actual_norm for alias in aliases):
+        return True
+    # Fallback: reward partial overlap for slash-delimited compound fields.
+    components = [component for component in expected_norm.split() if component]
+    return any(component in actual_norm for component in components)
 
 
 def grade_task4(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict]:
@@ -30,8 +112,15 @@ def grade_task4(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
         }
 
     gt_issues: list[dict] = ground_truth.get("issues", [])
-    gt_types = {issue["type"] for issue in gt_issues}
-    agent_types = {issue["type"] for issue in agent_issues if isinstance(issue, dict) and "type" in issue}
+
+    canonical_gt_types = {
+        _canonical_issue_type(issue["type"], issue.get("description", "")) for issue in gt_issues
+    }
+    canonical_agent_types = {
+        _canonical_issue_type(issue.get("type", ""), issue.get("description", ""))
+        for issue in agent_issues
+        if isinstance(issue, dict) and issue.get("type")
+    }
 
     if not gt_issues:
         if not agent_issues:
@@ -48,38 +137,46 @@ def grade_task4(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
             "field_scores": {},
         }
 
-    tp = len(gt_types & agent_types)
-    precision = tp / len(agent_types) if agent_types else 0.0
-    recall = tp / len(gt_types) if gt_types else 0.0
+    tp = len(canonical_gt_types & canonical_agent_types)
+    precision = tp / len(canonical_agent_types) if canonical_agent_types else 0.0
+    recall = tp / len(canonical_gt_types) if canonical_gt_types else 0.0
     detection_f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
 
     field_scores: dict[str, float] = {}
     detail_hits = 0.0
     for gt_issue in gt_issues:
-        issue_type = gt_issue["type"]
-        match = next((issue for issue in agent_issues if isinstance(issue, dict) and issue.get("type") == issue_type), None)
+        canonical_type = _canonical_issue_type(gt_issue["type"], gt_issue.get("description", ""))
+        match = next(
+            (
+                issue for issue in agent_issues
+                if isinstance(issue, dict)
+                and _canonical_issue_type(issue.get("type", ""), issue.get("description", "")) == canonical_type
+            ),
+            None,
+        )
         if match is None:
-            field_scores[issue_type] = 0.0
+            field_scores[canonical_type] = 0.0
             continue
-        gt_domain = str(gt_issue.get("domain", "")).upper()
-        gt_field = str(gt_issue.get("field", "")).upper()
-        agent_domain = str(match.get("domain", "")).upper()
-        agent_field = str(match.get("field", "")).upper()
-        agent_desc = str(match.get("description", "")).upper()
+
+        gt_domain = str(gt_issue.get("domain", ""))
+        gt_field = str(gt_issue.get("field", ""))
+        agent_domain = str(match.get("domain", ""))
+        agent_field = str(match.get("field", ""))
+        agent_desc = str(match.get("description", ""))
 
         issue_score = 0.0
-        if gt_domain and (gt_domain in agent_domain or gt_domain in agent_desc):
+        if gt_domain and _matches_domain(gt_domain, agent_domain, agent_desc):
             issue_score += 0.5
-        if gt_field and (gt_field in agent_field or gt_field in agent_desc):
+        if gt_field and _matches_field(gt_field, agent_field, agent_desc):
             issue_score += 0.5
-        field_scores[issue_type] = issue_score
+        field_scores[canonical_type] = issue_score
         detail_hits += issue_score
 
     correction_score = detail_hits / len(gt_issues) if gt_issues else 0.0
     score = _clamp(round(0.6 * detection_f1 + 0.4 * correction_score, 4))
 
-    missed_types = gt_types - agent_types
-    false_positive_types = agent_types - gt_types
+    missed_types = canonical_gt_types - canonical_agent_types
+    false_positive_types = canonical_agent_types - canonical_gt_types
     lines = [f"Score: {score:.2f}  (detection_f1={detection_f1:.2f}, correction={correction_score:.2f})"]
     if missed_types:
         lines.append(f"Missed issue types: {sorted(missed_types)}")

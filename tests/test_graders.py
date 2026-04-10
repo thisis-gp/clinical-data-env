@@ -229,6 +229,45 @@ def test_task4_partial_detection_two_issues():
     assert sub["missed"] == 1
 
 
+def test_task4_alias_issue_type_still_gets_detection_credit():
+    agent = {
+        "issues": [
+            {
+                "type": "first dose date mismatch",
+                "domain": "DM and EX",
+                "field": "RFSTDTC and EXSTDTC",
+                "description": "DM RFSTDTC does not match earliest EXSTDTC",
+            }
+        ]
+    }
+    score, _, sub = grade_task4(agent, GT_T4_ONE_ISSUE)
+    assert_valid_score(score)
+    assert sub["detection_score"] == pytest.approx(1.0)
+    assert sub["correction_score"] > 0.5
+
+
+def test_task4_orphan_sae_with_ae_only_domain_gets_partial_detail_credit():
+    agent = {
+        "issues": [
+            {
+                "type": "serious AE without DS",
+                "domain": "AE",
+                "field": "AETERM",
+                "description": "Serious AE has no DS record",
+            }
+        ]
+    }
+    gt = {
+        "issues": [
+            {"type": "orphan_sae", "domain": "AE/DS", "field": "AESER", "description": "SAE has no DS record"}
+        ]
+    }
+    score, _, sub = grade_task4(agent, gt)
+    assert_valid_score(score)
+    assert sub["detection_score"] == pytest.approx(1.0)
+    assert sub["correction_score"] > 0.0
+
+
 def test_task4_wrong_type_returns_minimum():
     score, feedback, sub = grade_task4("bad input", GT_T4_ONE_ISSUE)
     assert_valid_score(score)

@@ -54,6 +54,32 @@ def _get_benchmark_set() -> str:
     return os.getenv("BENCHMARK_SET", "toy").strip().lower()
 
 
+def _get_forced_task_id() -> int | None:
+    raw = os.getenv("FORCE_TASK_ID", "").strip().lower()
+    if not raw:
+        return None
+
+    task_lookup = {
+        "1": 1,
+        "task1": 1,
+        TASK_NAMES[1]: 1,
+        "2": 2,
+        "task2": 2,
+        TASK_NAMES[2]: 2,
+        "3": 3,
+        "task3": 3,
+        TASK_NAMES[3]: 3,
+        "4": 4,
+        "task4": 4,
+        TASK_NAMES[4]: 4,
+    }
+    forced_task = task_lookup.get(raw)
+    if forced_task is None:
+        valid = ", ".join(TASK_NAMES.values())
+        raise ValueError(f"Unsupported FORCE_TASK_ID '{raw}'. Use 1-4 or one of: {valid}")
+    return forced_task
+
+
 def _load_all_data() -> dict:
     data: dict = {}
     data_dir = _ENV_ROOT / "data"
@@ -96,8 +122,13 @@ class ClinicalDataEnvironment(Environment):
         self._current_action_history: list[dict[str, Any]] = []
 
     def reset(self) -> ClinicalObservation:
-        self._task_cycle_idx = (self._task_cycle_idx + 1) % len(TASK_ORDER)
-        self._current_task = TASK_ORDER[self._task_cycle_idx]
+        forced_task = _get_forced_task_id()
+        if forced_task is not None:
+            self._current_task = forced_task
+            self._task_cycle_idx = TASK_ORDER.index(forced_task)
+        else:
+            self._task_cycle_idx = (self._task_cycle_idx + 1) % len(TASK_ORDER)
+            self._current_task = TASK_ORDER[self._task_cycle_idx]
         self._cases = self._data[self._current_task]["cases"]
         self._current_case_idx = 0
         self._episode_rewards = []
@@ -252,12 +283,12 @@ class ClinicalDataEnvironment(Environment):
                 hints.append("More than one date-like raw field is present; use the protocol rule to choose RFSTDTC.")
 
         if self._current_task == 2 and isinstance(input_data, dict):
-            if isinstance(case.get("ground_truth", {}).get("violations"), list) and not case["ground_truth"]["violations"]:
-                hints.append("This record may already be SDTM-clean; do not assume every case contains violations.")
             if any("/" in str(value) for value in input_data.values()):
                 hints.append("At least one date appears to be in a non-ISO format.")
             if any(str(value).islower() for value in input_data.values() if isinstance(value, str) and len(value) <= 12):
                 hints.append("Some controlled terminology values may only differ by case or sponsor wording.")
+            if not hints:
+                hints.append("Validate dates, controlled terminology casing, and sponsor-specific AE terminology before flagging a violation.")
 
         if self._current_task == 3 and isinstance(input_data, list):
             visits = [row.get("VISIT", "?") for row in input_data if isinstance(row, dict)]

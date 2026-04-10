@@ -77,6 +77,22 @@ def test_pre_step_hints_is_nonempty_list(task_id):
     assert len(obs.pre_step_hints) > 0, f"pre_step_hints should not be empty for task {task_id}"
 
 
+def test_task2_hints_do_not_leak_ground_truth_cleanliness():
+    """Task 2 hints must be derived from input only, not from the hidden answer key."""
+    env = make_env()
+    cycle_env_to_task(env, 2)
+
+    clean_case = next(case for case in env._cases if not case["ground_truth"]["violations"])
+    violating_case = next(case for case in env._cases if case["ground_truth"]["violations"])
+
+    clean_hints = env._generate_pre_step_hints(clean_case)
+    violating_hints = env._generate_pre_step_hints(violating_case)
+
+    forbidden_phrase = "already be SDTM-clean"
+    assert all(forbidden_phrase not in hint for hint in clean_hints)
+    assert all(forbidden_phrase not in hint for hint in violating_hints)
+
+
 # ── action_history ────────────────────────────────────────────────────────────
 
 def test_action_history_starts_empty():
@@ -187,11 +203,14 @@ def test_difficulty_breakdown_populated_when_done():
 
 def test_episode_summary_keys_are_case_ids():
     """episode_summary keys should match case IDs from the task."""
+    env = make_env()
+    cycle_env_to_task(env, 1)
+    expected_case_ids = {case["case_id"] for case in env._cases}
     obs = _run_task_to_completion(1)
     assert obs.done
     for key in obs.episode_summary:
         assert isinstance(key, str), "episode_summary keys should be strings (case IDs)"
-        assert key.startswith("T1C"), f"Unexpected key in episode_summary: {key}"
+        assert key in expected_case_ids, f"Unexpected key in episode_summary: {key}"
 
 
 def test_difficulty_breakdown_values_are_floats():
