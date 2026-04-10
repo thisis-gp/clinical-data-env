@@ -7,10 +7,15 @@ Checks cross-domain inconsistencies across DM, EX, CM, AE, and DS domains.
 from typing import Any
 
 
+def _clamp(score: float) -> float:
+    """Clamp score to strictly open interval (0, 1)."""
+    return max(0.01, min(0.99, score))
+
+
 def grade_task4(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict]:
     """Grade agent output for Task 4 (cross-domain validation)."""
     if not isinstance(agent_output, dict):
-        return 0.0, f"Expected a JSON object with 'issues' key, got {type(agent_output).__name__}.", {
+        return _clamp(0.0), f"Expected a JSON object with 'issues' key, got {type(agent_output).__name__}.", {
             "detection_score": 0.0,
             "correction_score": 0.0,
             "field_scores": {},
@@ -18,7 +23,7 @@ def grade_task4(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
 
     agent_issues: list[dict] = agent_output.get("issues", [])
     if not isinstance(agent_issues, list):
-        return 0.0, "Expected 'issues' to be a list.", {
+        return _clamp(0.0), "Expected 'issues' to be a list.", {
             "detection_score": 0.0,
             "correction_score": 0.0,
             "field_scores": {},
@@ -30,13 +35,13 @@ def grade_task4(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
 
     if not gt_issues:
         if not agent_issues:
-            return 1.0, "Score: 1.00. Correctly identified no cross-domain inconsistencies.", {
+            return _clamp(1.0), "Score: 0.99. Correctly identified no cross-domain inconsistencies.", {
                 "detection_score": 1.0,
                 "correction_score": 1.0,
                 "field_scores": {},
             }
         fp_count = len(agent_issues)
-        score = round(max(0.0, 1.0 - min(fp_count * 0.25, 1.0)), 4)
+        score = _clamp(round(max(0.0, 1.0 - min(fp_count * 0.25, 1.0)), 4))
         return score, f"Score: {score:.2f}. Agent reported {fp_count} false cross-domain issue(s).", {
             "detection_score": 0.0,
             "correction_score": 0.0,
@@ -71,7 +76,7 @@ def grade_task4(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
         detail_hits += issue_score
 
     correction_score = detail_hits / len(gt_issues) if gt_issues else 0.0
-    score = round(0.6 * detection_f1 + 0.4 * correction_score, 4)
+    score = _clamp(round(0.6 * detection_f1 + 0.4 * correction_score, 4))
 
     missed_types = gt_types - agent_types
     false_positive_types = agent_types - gt_types

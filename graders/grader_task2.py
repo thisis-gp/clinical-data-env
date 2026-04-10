@@ -8,6 +8,10 @@ Supports both violated and zero-violation records.
 from typing import Any
 
 
+def _clamp(score: float) -> float:
+    return max(0.01, min(0.99, score))
+
+
 def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict]:
     """Grade agent output for Task 2 (SDTM validation)."""
     gt_violations: list[dict] = ground_truth.get("violations", [])
@@ -17,7 +21,7 @@ def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
     elif isinstance(agent_output, list):
         agent_violations = agent_output
     else:
-        return 0.0, f"Expected a JSON object with 'violations' key, got {type(agent_output).__name__}.", {
+        return _clamp(0.0), f"Expected a JSON object with 'violations' key, got {type(agent_output).__name__}.", {
             "detection_score": 0.0,
             "correction_score": 0.0,
             "field_scores": {},
@@ -28,7 +32,7 @@ def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
 
     if not gt_violations:
         if not agent_violations:
-            return 1.0, "Score: 1.00. Correctly identified no violations in this record.", {
+            return _clamp(1.0), "Score: 0.99. Correctly identified no violations in this record.", {
                 "detection_score": 1.0,
                 "correction_score": 1.0,
                 "field_scores": {},
@@ -38,7 +42,7 @@ def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
 
         fp_count = len(agent_violations)
         penalty = min(fp_count * 0.25, 1.0)
-        score = round(max(0.0, 1.0 - penalty), 4)
+        score = _clamp(round(max(0.0, 1.0 - penalty), 4))
         fp_fields = [v.get("field", "?") for v in agent_violations if isinstance(v, dict)]
         return score, (
             f"Score: {score:.2f}. This record has NO violations. "
@@ -64,7 +68,7 @@ def grade_task2(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
     }
     correct_fixes = sum(1 for field in gt_fields if agent_corrections.get(field) == gt_corrections.get(field))
     correction_score = correct_fixes / len(gt_fields) if gt_fields else 0.0
-    score = round(0.5 * detection_f1 + 0.5 * correction_score, 4)
+    score = _clamp(round(0.5 * detection_f1 + 0.5 * correction_score, 4))
 
     missed = gt_fields - agent_fields
     false_positives = agent_fields - gt_fields

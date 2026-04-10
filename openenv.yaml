@@ -19,3 +19,6 @@ tasks:
   - name: task3_sdtm_to_adam
     description: Derive ADAM ADLB analysis dataset from SDTM LB records for HbA1c primary endpoint
     difficulty: hard
+  - name: task4_cross_domain_validation
+    description: Identify cross-domain SDTM inconsistencies across DM, EX, CM, AE, and DS domains
+    difficulty: very_hard

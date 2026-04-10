@@ -21,6 +21,10 @@ PCHG_RELATIVE_TOLERANCE = 0.001  # 0.1%
 PCHG_ABSOLUTE_FLOOR = 0.01
 
 
+def _clamp(score: float) -> float:
+    return max(0.01, min(0.99, score))
+
+
 def _within_tolerance(field: str, agent_val: float, expected_val: float) -> bool:
     if field == "PCHG":
         tolerance = max(abs(expected_val) * PCHG_RELATIVE_TOLERANCE, PCHG_ABSOLUTE_FLOOR)
@@ -31,7 +35,7 @@ def _within_tolerance(field: str, agent_val: float, expected_val: float) -> bool
 def grade_task3(agent_records: Any, ground_truth_records: list) -> tuple[float, str, dict]:
     """Grade agent output for Task 3 (SDTM -> ADAM derivation)."""
     if not isinstance(agent_records, list):
-        return 0.0, f"Expected a JSON array, got {type(agent_records).__name__}.", {
+        return _clamp(0.0), f"Expected a JSON array, got {type(agent_records).__name__}.", {
             "detection_score": 0.0,
             "correction_score": 0.0,
             "field_scores": {},
@@ -83,7 +87,7 @@ def grade_task3(agent_records: Any, ground_truth_records: list) -> tuple[float, 
             else:
                 feedback_lines.append(f"  {visit}.{field}: expected {expected_val!r}, got {agent_val!r}")
 
-    score = round(correct / total, 4) if total > 0 else 0.0
+    score = _clamp(round(correct / total, 4) if total > 0 else 0.0)
     detection_score = record_hits / len(ground_truth_records) if ground_truth_records else 0.0
     correction_score = score
 
