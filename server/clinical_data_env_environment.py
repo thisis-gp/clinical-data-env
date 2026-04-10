@@ -12,6 +12,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import Any
 from uuid import uuid4
 
 from openenv.core.env_server.interfaces import Environment
@@ -83,6 +84,7 @@ class ClinicalDataEnvironment(Environment):
         self._current_case_attempts = 0
         self._last_sub_scores: dict = {}
         self._case_summaries: list[dict] = []
+        self._current_action_history: list[dict[str, Any]] = []
 
     def reset(self) -> ClinicalObservation:
         self._task_cycle_idx = (self._task_cycle_idx + 1) % len(TASK_ORDER)
@@ -93,6 +95,7 @@ class ClinicalDataEnvironment(Environment):
         self._current_case_attempts = 0
         self._last_sub_scores = {}
         self._case_summaries = []
+        self._current_action_history = []
         self._state = State(episode_id=str(uuid4()), step_count=0)
         return self._make_observation(self._cases[0], feedback="", reward=0.0, done=False)
 
@@ -122,6 +125,16 @@ class ClinicalDataEnvironment(Environment):
         score, feedback, sub_scores = self._grade(action, case)
         self._last_sub_scores = sub_scores
         self._current_case_attempts += 1
+        self._current_action_history.append(
+            {
+                "attempt": self._current_case_attempts,
+                "reward": _submission_safe_score(score),
+                "task_id": action.task_id,
+                "reasoning": action.reasoning,
+                "output_data": action.output_data,
+                "feedback": feedback,
+            }
+        )
 
         if score < 1.0 and self._current_case_attempts < self.MAX_ATTEMPTS_PER_CASE:
             obs = self._make_observation(
@@ -173,6 +186,7 @@ class ClinicalDataEnvironment(Environment):
                 difficulty_breakdown=self._build_difficulty_breakdown(),
             )
 
+        self._current_action_history = []
         return self._make_observation(
             self._cases[self._current_case_idx],
             feedback=feedback,
@@ -197,7 +211,9 @@ class ClinicalDataEnvironment(Environment):
             task_description=case["task_description"],
             input_data=case["input_data"],
             study_context=case["study_context"],
+            pre_step_hints=self._generate_pre_step_hints(case),
             feedback=feedback,
+            action_history=list(self._current_action_history),
             case_number=self._current_case_idx + 1,
             total_cases=len(self._cases),
             task_score=task_score,
@@ -209,6 +225,52 @@ class ClinicalDataEnvironment(Environment):
             done=done,
             reward=_submission_safe_score(reward),
         )
+
+    def _generate_pre_step_hints(self, case: dict) -> list[str]:
+        """Surface lightweight, deterministic hints before the first step."""
+        input_data = case.get("input_data", {})
+        hints: list[str] = []
+
+        if self._current_task == 1 and isinstance(input_data, dict):
+            keys = set(input_data.keys())
+            if not {"SUBJID", "SITEID", "AGE", "SEX", "RACE", "IC_DT", "COUNTRY"}.issuperset(keys):
+                hints.append("Some raw field names are sponsor-specific rather than standard CDISC-style names.")
+            if "COUNTRY" not in keys and "COUNTRY_CODE" not in keys:
+                hints.append("Country may need to be inferred from site information rather than copied directly.")
+            date_like = [key for key in keys if "DATE" in key or key.endswith("_DT")]
+            if len(date_like) > 1:
+                hints.append("More than one date-like raw field is present; use the protocol rule to choose RFSTDTC.")
+
+        if self._current_task == 2 and isinstance(input_data, dict):
+            if isinstance(case.get("ground_truth", {}).get("violations"), list) and not case["ground_truth"]["violations"]:
+                hints.append("This record may already be SDTM-clean; do not assume every case contains violations.")
+            if any("/" in str(value) for value in input_data.values()):
+                hints.append("At least one date appears to be in a non-ISO format.")
+            if any(str(value).islower() for value in input_data.values() if isinstance(value, str) and len(value) <= 12):
+                hints.append("Some controlled terminology values may only differ by case or sponsor wording.")
+
+        if self._current_task == 3 and isinstance(input_data, list):
+            visits = [row.get("VISIT", "?") for row in input_data if isinstance(row, dict)]
+            if len(visits) >= 4:
+                hints.append("This derivation includes multiple post-baseline visits; reuse one consistent baseline across all rows.")
+            if any("SCREENING" in str(visit).upper() or "BASELINE" in str(visit).upper() for visit in visits):
+                hints.append("A baseline visit is present; use it consistently for BASE, CHG, and PCHG.")
+
+        if self._current_task == 4 and isinstance(input_data, dict):
+            ex_records = input_data.get("EX", [])
+            cm_records = input_data.get("CM", [])
+            ae_records = input_data.get("AE", [])
+            ds_records = input_data.get("DS", [])
+            if isinstance(ex_records, list) and len(ex_records) > 1:
+                hints.append("Multiple EX rows are present; compare DM.RFSTDTC against the earliest EX start date.")
+            if any(str(row.get("CMCAT", "")).upper() == "PROHIBITED" for row in cm_records if isinstance(row, dict)):
+                hints.append("A prohibited concomitant medication is present; check whether it starts before first dose.")
+            if any(str(row.get("AESER", "")).upper() == "Y" for row in ae_records if isinstance(row, dict)) and not ds_records:
+                hints.append("A serious AE is present without obvious DS support; verify whether a matching disposition record exists.")
+            if not hints:
+                hints.append("Cross-check first-dose timing, prohibited concomitant medications, and SAE disposition consistency.")
+
+        return hints[:3]
 
     def _build_episode_summary(self) -> dict:
         return {

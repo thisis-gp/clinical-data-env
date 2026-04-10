@@ -37,7 +37,15 @@ class ClinicalObservation(Observation):
     task_description: str = Field(default="", description="What the agent must do for this case")
     input_data: Any = Field(default=None, description="Raw input data for this case")
     study_context: str = Field(default="", description="CDISC rules and protocol instructions")
+    pre_step_hints: list[str] = Field(
+        default_factory=list,
+        description="Auto-detected hints surfaced before the agent acts on the current case",
+    )
     feedback: str = Field(default="", description="Grader feedback from the previous step")
+    action_history: list[dict[str, Any]] = Field(
+        default_factory=list,
+        description="History of prior attempts on the current case",
+    )
     case_number: int = Field(default=0, description="Current case index (1-based)")
     total_cases: int = Field(default=0, description="Total cases in this task")
     task_score: float = Field(default=0.0, description="Running average score for this task")
