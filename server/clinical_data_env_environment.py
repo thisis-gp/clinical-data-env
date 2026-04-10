@@ -40,6 +40,15 @@ TASK_ORDER = [1, 2, 3, 4]
 SUBMISSION_SCORE_FLOOR = 0.01
 SUBMISSION_SCORE_CAP = 0.99
 
+# Maximum steps per task (attempts across all cases).
+# Agents that exceed this are considered out-of-budget and the episode ends.
+MAX_STEPS_PER_TASK = {
+    1: 20,   # easy — 10 cases × 2 attempts max
+    2: 30,   # medium — 10 cases × 2 attempts + some slack
+    3: 30,   # hard — same
+    4: 30,   # very hard — same
+}
+
 
 def _get_benchmark_set() -> str:
     return os.getenv("BENCHMARK_SET", "toy").strip().lower()
@@ -101,8 +110,9 @@ class ClinicalDataEnvironment(Environment):
 
     def step(self, action: ClinicalAction) -> ClinicalObservation:  # type: ignore[override]
         self._state.step_count += 1
+        max_steps = MAX_STEPS_PER_TASK.get(self._current_task, 30)
 
-        if self._current_case_idx >= len(self._cases):
+        if self._state.step_count > max_steps or self._current_case_idx >= len(self._cases):
             avg = sum(self._episode_rewards) / len(self._episode_rewards) if self._episode_rewards else SUBMISSION_SCORE_FLOOR
             avg = _submission_safe_score(avg)
             return ClinicalObservation(

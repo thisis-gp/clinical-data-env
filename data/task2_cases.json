@@ -166,6 +166,165 @@
           }
         ]
       }
+    },
+    {
+      "case_id": "T2C6",
+      "difficulty": "easy",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-04-006",
+        "AETERM": "abdominal pain",
+        "AEDECOD": "Abdominal pain",
+        "AESTDTC": "2024-03-20",
+        "AEENDTC": "2024-03-22",
+        "AESEV": "MILD",
+        "AESER": "N",
+        "AEREL": "NOT RELATED",
+        "AEOUT": "RECOVERED/RESOLVED"
+      },
+      "ground_truth": {
+        "violations": []
+      }
+    },
+    {
+      "case_id": "T2C7",
+      "difficulty": "easy",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-04-007",
+        "AETERM": "peripheral edema",
+        "AEDECOD": "Peripheral oedema",
+        "AESTDTC": "2024-05-21",
+        "AEENDTC": "2024-06-04",
+        "AESEV": "Mild",
+        "AESER": "N",
+        "AEREL": "RELATED",
+        "AEOUT": "RECOVERED/RESOLVED"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESEV",
+            "issue": "Not CDISC CT — must be uppercase MILD",
+            "corrected_value": "MILD"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T2C8",
+      "difficulty": "medium",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-05-008",
+        "AETERM": "injection site reaction",
+        "AEDECOD": "Injection site reaction",
+        "AESTDTC": "28/08/2024",
+        "AEENDTC": "2024-08-30",
+        "AESEV": "MODERATE",
+        "AESER": "No",
+        "AEREL": "RELATED",
+        "AEOUT": "Resolved with sequelae"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2024-08-28"
+          },
+          {
+            "field": "AESER",
+            "issue": "Not CDISC CT — must be Y or N, not 'No'",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Not CDISC CT — must be RECOVERED/RESOLVED WITH SEQUELAE",
+            "corrected_value": "RECOVERED/RESOLVED WITH SEQUELAE"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T2C9",
+      "difficulty": "medium",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-05-009",
+        "AETERM": "urinary tract infection",
+        "AEDECOD": "Urinary tract infection",
+        "AESTDTC": "2024-11-15",
+        "AEENDTC": "2024-11-22",
+        "AESEV": "MILD",
+        "AESER": "FALSE",
+        "AEREL": "Not related",
+        "AEOUT": "UNKNOWN"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESER",
+            "issue": "Not CDISC CT — must be Y or N, not 'FALSE'",
+            "corrected_value": "N"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Not CDISC CT — must be NOT RELATED (all uppercase)",
+            "corrected_value": "NOT RELATED"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "T2C10",
+      "difficulty": "hard",
+      "task_description": "Identify ALL CDISC violations in this SDTM AE record. Output a JSON object with key 'violations' containing a list. Each violation must have: 'field', 'issue', 'corrected_value'.",
+      "study_context": "CDISC SDTM AE DOMAIN CONTROLLED TERMINOLOGY RULES:\n- AESTDTC: ISO 8601 format YYYY-MM-DD — REQUIRED\n- AESEV: must be exactly \"MILD\", \"MODERATE\", or \"SEVERE\"\n- AESER: must be exactly \"Y\" or \"N\"\n- AEREL: must be exactly \"RELATED\" or \"NOT RELATED\"\n- AEOUT: must be exactly one of: \"RECOVERED/RESOLVED\", \"NOT RECOVERED/NOT RESOLVED\", \"RECOVERED/RESOLVED WITH SEQUELAE\", \"FATAL\", \"UNKNOWN\"",
+      "input_data": {
+        "USUBJID": "CDISCPILOT01-06-010",
+        "AETERM": "acute pancreatitis",
+        "AEDECOD": "Pancreatitis acute",
+        "AESTDTC": "September 20, 2024",
+        "AEENDTC": "2024-10-05",
+        "AESEV": "severe",
+        "AESER": "yes",
+        "AEREL": "Possibly related",
+        "AEOUT": "Not recovered"
+      },
+      "ground_truth": {
+        "violations": [
+          {
+            "field": "AESTDTC",
+            "issue": "Date not in ISO 8601 format YYYY-MM-DD",
+            "corrected_value": "2024-09-20"
+          },
+          {
+            "field": "AESEV",
+            "issue": "Not CDISC CT — must be uppercase SEVERE",
+            "corrected_value": "SEVERE"
+          },
+          {
+            "field": "AESER",
+            "issue": "Not CDISC CT — must be Y or N, not 'yes'",
+            "corrected_value": "Y"
+          },
+          {
+            "field": "AEREL",
+            "issue": "Not CDISC CT — must be RELATED or NOT RELATED",
+            "corrected_value": "RELATED"
+          },
+          {
+            "field": "AEOUT",
+            "issue": "Not CDISC CT — must be NOT RECOVERED/NOT RESOLVED",
+            "corrected_value": "NOT RECOVERED/NOT RESOLVED"
+          }
+        ]
+      }
     }
   ]
 }

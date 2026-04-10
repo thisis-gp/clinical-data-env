@@ -122,6 +122,127 @@
         "RFSTDTC": "2024-07-22",
         "COUNTRY": "KOR"
       }
+    },
+    {
+      "case_id": "T1C6",
+      "difficulty": "easy",
+      "task_description": "Convert this raw EDC record to a valid SDTM DM domain record. Output a JSON object with only these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY.",
+      "study_context": "STUDY: CDISCPILOT01 — Type 2 Diabetes Phase 2 Trial\n\nCDISC SDTM DM DOMAIN RULES:\n- USUBJID = STUDYID + \"-\" + SITEID + \"-\" + SUBJID\n- AGE = integer (years at consent)\n- SEX: CDISC CT — \"M\" (Male) or \"F\" (Female)\n- RACE: CDISC CT — \"WHITE\", \"BLACK OR AFRICAN AMERICAN\", \"ASIAN\", \"AMERICAN INDIAN OR ALASKA NATIVE\", \"NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER\"\n- RFSTDTC = ISO 8601 format YYYY-MM-DD (date of first study treatment)\n- COUNTRY = ISO 3166-1 alpha-3 code (e.g., \"USA\", \"GBR\", \"DEU\", \"FRA\", \"CAN\")",
+      "input_data": {
+        "subject_num": "006",
+        "site_id": "04",
+        "study_code": "CDISCPILOT01",
+        "age": "58",
+        "gender": "Female",
+        "race_description": "White",
+        "first_dose_date": "10-03-2024",
+        "country_name": "Germany"
+      },
+      "ground_truth": {
+        "USUBJID": "CDISCPILOT01-04-006",
+        "AGE": 58,
+        "SEX": "F",
+        "RACE": "WHITE",
+        "RFSTDTC": "2024-03-10",
+        "COUNTRY": "DEU"
+      }
+    },
+    {
+      "case_id": "T1C7",
+      "difficulty": "easy",
+      "task_description": "Convert this raw EDC record to a valid SDTM DM domain record. Output a JSON object with only these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY.",
+      "study_context": "STUDY: CDISCPILOT01 — Type 2 Diabetes Phase 2 Trial\n\nCDISC SDTM DM DOMAIN RULES:\n- USUBJID = STUDYID + \"-\" + SITEID + \"-\" + SUBJID\n- AGE = integer (years at consent)\n- SEX: CDISC CT — \"M\" (Male) or \"F\" (Female)\n- RACE: CDISC CT — \"WHITE\", \"BLACK OR AFRICAN AMERICAN\", \"ASIAN\", \"AMERICAN INDIAN OR ALASKA NATIVE\", \"NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER\"\n- RFSTDTC = ISO 8601 format YYYY-MM-DD (date of first study treatment)\n- COUNTRY = ISO 3166-1 alpha-3 code (e.g., \"USA\", \"GBR\", \"DEU\", \"FRA\", \"CAN\")",
+      "input_data": {
+        "subject_num": "007",
+        "site_id": "04",
+        "study_code": "CDISCPILOT01",
+        "age": "39",
+        "gender": "Male",
+        "race_description": "Asian",
+        "first_dose_date": "May 14, 2024",
+        "country_name": "France"
+      },
+      "ground_truth": {
+        "USUBJID": "CDISCPILOT01-04-007",
+        "AGE": 39,
+        "SEX": "M",
+        "RACE": "ASIAN",
+        "RFSTDTC": "2024-05-14",
+        "COUNTRY": "FRA"
+      }
+    },
+    {
+      "case_id": "T1C8",
+      "difficulty": "medium",
+      "task_description": "Convert this raw EDC record to a valid SDTM DM domain record. Output a JSON object with only these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY.",
+      "study_context": "STUDY: CDISCPILOT01 — Type 2 Diabetes Phase 2 Trial\n\nCDISC SDTM DM DOMAIN RULES:\n- USUBJID = STUDYID + \"-\" + SITEID + \"-\" + SUBJID\n- AGE = integer (years at consent)\n- SEX: CDISC CT — \"M\" (Male) or \"F\" (Female)\n- RACE: CDISC CT — \"WHITE\", \"BLACK OR AFRICAN AMERICAN\", \"ASIAN\", \"AMERICAN INDIAN OR ALASKA NATIVE\", \"NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER\"\n- RFSTDTC = ISO 8601 format YYYY-MM-DD (date of first study treatment)\n- COUNTRY = ISO 3166-1 alpha-3 code (e.g., \"USA\", \"GBR\", \"DEU\", \"FRA\", \"CAN\")",
+      "input_data": {
+        "participant_id": "008",
+        "clinical_site": "05",
+        "protocol_number": "CDISCPILOT01",
+        "age_at_consent": "71",
+        "biological_sex": "Female",
+        "ethnic_background": "Black or African American",
+        "treatment_start": "28/08/2024",
+        "site_country": "Canada"
+      },
+      "ground_truth": {
+        "USUBJID": "CDISCPILOT01-05-008",
+        "AGE": 71,
+        "SEX": "F",
+        "RACE": "BLACK OR AFRICAN AMERICAN",
+        "RFSTDTC": "2024-08-28",
+        "COUNTRY": "CAN"
+      }
+    },
+    {
+      "case_id": "T1C9",
+      "difficulty": "medium",
+      "task_description": "Convert this raw EDC record to a valid SDTM DM domain record. Output a JSON object with only these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY.",
+      "study_context": "STUDY: CDISCPILOT01 — Type 2 Diabetes Phase 2 Trial\n\nCDISC SDTM DM DOMAIN RULES:\n- USUBJID = STUDYID + \"-\" + SITEID + \"-\" + SUBJID\n- AGE = integer (years at consent)\n- SEX: CDISC CT — \"M\" (Male) or \"F\" (Female)\n- RACE: CDISC CT — \"WHITE\", \"BLACK OR AFRICAN AMERICAN\", \"ASIAN\", \"AMERICAN INDIAN OR ALASKA NATIVE\", \"NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER\"\n- RFSTDTC = ISO 8601 format YYYY-MM-DD (date of first study treatment)\n- COUNTRY = ISO 3166-1 alpha-3 code (e.g., \"USA\", \"GBR\", \"DEU\", \"FRA\", \"CAN\")",
+      "input_data": {
+        "subj_no": "009",
+        "site_no": "05",
+        "study_id": "CDISCPILOT01",
+        "years_old": "55",
+        "sex": "M",
+        "race": "Native Hawaiian or Other Pacific Islander",
+        "first_dose_date": "11-11-2024",
+        "country": "Australia"
+      },
+      "ground_truth": {
+        "USUBJID": "CDISCPILOT01-05-009",
+        "AGE": 55,
+        "SEX": "M",
+        "RACE": "NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER",
+        "RFSTDTC": "2024-11-11",
+        "COUNTRY": "AUS"
+      }
+    },
+    {
+      "case_id": "T1C10",
+      "difficulty": "hard",
+      "task_description": "Convert this raw EDC record to a valid SDTM DM domain record. Output a JSON object with only these fields: USUBJID, AGE, SEX, RACE, RFSTDTC, COUNTRY.",
+      "study_context": "STUDY: CDISCPILOT01 — Type 2 Diabetes Phase 2 Trial\n\nCDISC SDTM DM DOMAIN RULES:\n- USUBJID = STUDYID + \"-\" + SITEID + \"-\" + SUBJID\n- AGE = integer (years at consent)\n- SEX: CDISC CT — \"M\" (Male) or \"F\" (Female)\n- RACE: CDISC CT — \"WHITE\", \"BLACK OR AFRICAN AMERICAN\", \"ASIAN\", \"AMERICAN INDIAN OR ALASKA NATIVE\", \"NATIVE HAWAIIAN OR OTHER PACIFIC ISLANDER\", \"OTHER\", \"UNKNOWN\"\n- RFSTDTC = ISO 8601 format YYYY-MM-DD\n- COUNTRY = ISO 3166-1 alpha-3 code\n\nCRITICAL DATE RULE: RFSTDTC must be the date of FIRST INVESTIGATIONAL PRODUCT ADMINISTRATION (field: ip_admin_date). The screening_date is the date of the screening visit and must NOT be used as RFSTDTC.\n\nSPONSOR NOTE ON RACE CODING: \"Multiracial\" is NOT a valid CDISC CT RACE term. Map to \"OTHER\". Japan site IDs are 06.",
+      "input_data": {
+        "subject_num": "010",
+        "site_id": "06",
+        "study_code": "CDISCPILOT01",
+        "age": "48",
+        "gender": "Female",
+        "race_description": "Multiracial",
+        "screening_date": "September 2, 2024",
+        "ip_admin_date": "September 16, 2024",
+        "country_name": "Japan"
+      },
+      "ground_truth": {
+        "USUBJID": "CDISCPILOT01-06-010",
+        "AGE": 48,
+        "SEX": "F",
+        "RACE": "OTHER",
+        "RFSTDTC": "2024-09-16",
+        "COUNTRY": "JPN"
+      }
     }
   ]
 }

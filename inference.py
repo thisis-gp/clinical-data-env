@@ -153,6 +153,9 @@ def call_llm(obs_data: dict) -> dict:
     case_number = obs_data.get("case_number", "?")
     total_cases = obs_data.get("total_cases", "?")
     case_attempt = obs_data.get("case_attempt", 1)
+    pre_step_hints = obs_data.get("pre_step_hints", [])
+    action_history = obs_data.get("action_history", [])
+    field_scores = obs_data.get("field_scores", {})
 
     user_content = (
         f"TASK ID: {task_id}\n"
@@ -163,8 +166,31 @@ def call_llm(obs_data: dict) -> dict:
         f"INPUT DATA:\n{json.dumps(input_data, indent=2)}\n"
     )
 
+    if pre_step_hints:
+        hints_text = "\n".join(f"  - {h}" for h in pre_step_hints)
+        user_content += f"\nHINTS (auto-detected from this case):\n{hints_text}\n"
+
     if feedback:
         user_content += f"\nFEEDBACK FROM PREVIOUS STEP:\n{feedback}\n"
+
+    if field_scores:
+        failed = [f for f, s in field_scores.items() if s == 0.0]
+        passed = [f for f, s in field_scores.items() if s == 1.0]
+        if failed:
+            user_content += f"\nFIELDS YOU GOT WRONG: {', '.join(failed)}\n"
+        if passed:
+            user_content += f"FIELDS YOU GOT RIGHT (keep these): {', '.join(passed)}\n"
+
+    if action_history and len(action_history) > 0:
+        user_content += "\nYOUR PREVIOUS ATTEMPTS ON THIS CASE:\n"
+        for attempt in action_history:
+            attempt_num = attempt.get("attempt", "?")
+            prev_reward = attempt.get("reward", 0.0)
+            prev_output = attempt.get("output_data", {})
+            user_content += (
+                f"  Attempt {attempt_num} (score: {prev_reward:.2f}):\n"
+                f"  {json.dumps(prev_output, separators=(',', ':'))}\n"
+            )
 
     response = client.chat.completions.create(
         model=MODEL_NAME,
@@ -242,6 +268,9 @@ def run_episode(env, task_name: str, ClinicalAction) -> tuple[bool, int, float, 
                 "case_number": obs.case_number,
                 "total_cases": obs.total_cases,
                 "case_attempt": obs.case_attempt,
+                "pre_step_hints": getattr(obs, "pre_step_hints", []),
+                "action_history": getattr(obs, "action_history", []),
+                "field_scores": getattr(obs, "field_scores", {}),
             }
 
             error_msg = "null"
