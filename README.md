@@ -41,7 +41,7 @@ The ADaM derivation task is the most distinctive piece. It forces the agent to i
 
 | Benchmark | Task 1 | Task 2 | Task 3 | Task 4 |
 |-----------|--------|--------|--------|--------|
-| `toy` | 10 | 10 | 10 | 5 |
+| `toy` | 10 | 10 | 10 | 10 |
 | `pharmaverse` | 10 | 10 | 10 | 10 |
 
 Each episode covers one full task. Each case allows up to two attempts, with a retry penalty on second-attempt success.

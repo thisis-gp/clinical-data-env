@@ -140,6 +140,16 @@ class ClinicalDataEnvironment(Environment):
         return self._make_observation(self._cases[0], feedback="", reward=0.0, done=False)
 
     def step(self, action: ClinicalAction) -> ClinicalObservation:  # type: ignore[override]
+        # Guard: step() called before reset()
+        if self._current_task == 0:
+            return ClinicalObservation(
+                task_id=0,
+                task_name="none",
+                task_description="Call reset() before step().",
+                done=True,
+                reward=SUBMISSION_SCORE_FLOOR,
+            )
+
         self._state.step_count += 1
         max_steps = MAX_STEPS_PER_TASK.get(self._current_task, 30)
 

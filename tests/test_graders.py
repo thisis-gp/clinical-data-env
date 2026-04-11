@@ -139,7 +139,7 @@ def test_task3_perfect_score():
 
 
 def test_task3_aval_rounding_within_tolerance():
-    """Agent rounds AVAL to 3dp — should pass with loose AVAL tolerance (0.001)."""
+    """Agent rounds AVAL to 3dp — should pass with AVAL absolute tolerance (0.05)."""
     agent = [{**r} for r in GT_T3]
     agent[0] = {**agent[0], "AVAL": 62.842}  # within 0.001 of 62.84175
     score, feedback, sub = grade_task3(agent, GT_T3)
@@ -156,7 +156,7 @@ def test_task3_wrong_pchg_fails():
 
 
 def test_task3_pchg_relative_tolerance():
-    """PCHG within 0.5% relative tolerance should pass."""
+    """PCHG within 0.1% relative tolerance (PCHG_RELATIVE_TOLERANCE=0.001) should pass."""
     agent = [{**r} for r in GT_T3]
     agent[1] = {**agent[1], "PCHG": -17.40}  # within 0.5% of -17.39
     score, feedback, sub = grade_task3(agent, GT_T3)

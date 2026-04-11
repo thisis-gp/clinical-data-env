@@ -14,7 +14,7 @@ TYPE_ALIASES = {
         "dm_ex_date_mismatch",
         "dm/ex date mismatch",
         "dm ex date mismatch",
-        "date mismatch",
+        "dm rfstdtc mismatch",
         "first dose date mismatch",
         "rfstdtc exstdtc mismatch",
         "rfstdtc mismatch",

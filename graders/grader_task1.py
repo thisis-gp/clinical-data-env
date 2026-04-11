@@ -41,7 +41,7 @@ def grade_task1(agent_output: Any, ground_truth: dict) -> tuple[float, str, dict
 
     extra_fields = set(agent_output.keys()) - EXPECTED_FIELDS
     penalty = min(len(extra_fields) * 0.05, 0.2)
-    detection_score = 1.0 if set(ground_truth.keys()).issubset(agent_output.keys()) else correct / total if total else 0.0
+    detection_score = correct / total if total > 0 else 0.0
     correction_score = correct / total if total > 0 else 0.0
     score = _clamp(max(0.0, round(correction_score - penalty, 4)))
 
