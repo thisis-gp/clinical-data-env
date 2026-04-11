@@ -268,6 +268,14 @@ def test_task4_orphan_sae_with_ae_only_domain_gets_partial_detail_credit():
     assert sub["correction_score"] > 0.0
 
 
+def test_task4_vague_inconsistency_does_not_get_detection_credit():
+    """Vague 'inconsistency' label must NOT match any specific issue type."""
+    agent = {"issues": [{"type": "inconsistency", "domain": "unknown", "field": "unknown", "description": "some issue"}]}
+    score, _, sub = grade_task4(agent, GT_T4_ONE_ISSUE)
+    assert_valid_score(score)
+    assert sub["detection_score"] == pytest.approx(0.0)
+
+
 def test_task4_wrong_type_returns_minimum():
     score, feedback, sub = grade_task4("bad input", GT_T4_ONE_ISSUE)
     assert_valid_score(score)

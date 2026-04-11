@@ -17,7 +17,9 @@ TYPE_ALIASES = {
         "date mismatch",
         "first dose date mismatch",
         "rfstdtc exstdtc mismatch",
-        "inconsistency",
+        "rfstdtc mismatch",
+        "exstdtc mismatch",
+        "first dose date inconsistency",
     },
     "prohibited_cm_before_first_dose": {
         "prohibited_cm_before_first_dose",
@@ -26,8 +28,8 @@ TYPE_ALIASES = {
         "prohibited medication before first dose",
         "cm before first dose",
         "prohibited concomitant medication before first dose",
-        "inconsistent cm record",
-        "inconsistency",
+        "concomitant medication before first dose",
+        "prohibited cm timing",
     },
     "orphan_sae": {
         "orphan_sae",
@@ -36,7 +38,8 @@ TYPE_ALIASES = {
         "sae without ds",
         "ae ds inconsistency",
         "serious adverse event missing ds",
-        "inconsistency",
+        "sae missing disposition",
+        "serious ae no disposition",
     },
 }
 
