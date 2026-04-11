@@ -1,257 +1,538 @@
 {
-  "task_name": "task4_cross_domain_validation",
-  "description": "Identify cross-domain SDTM inconsistencies across DM, EX, CM, AE, and DS domains using a pharmaverse-style benchmark with difficulty progression.",
-  "cases": [
-    {
-      "case_id": "PV_T4_1",
-      "difficulty": "easy",
-      "task_description": "Review the SDTM records for subject 01-01-101 and identify any cross-domain inconsistencies. Return a JSON object with key 'issues'. Each issue must include 'type', 'domain', 'field', and 'description'. If no issues exist, return {'issues': []}.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. DM.RFSTDTC must match the earliest EX.EXSTDTC for the subject.\n2. Any CM record with CMCAT='PROHIBITED' must not start before RFSTDTC.\n3. Any AE with AESER='Y' must have a matching DS record documenting a serious event or discontinuation due to AE.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-101", "RFSTDTC": "2025-01-15", "SEX": "M", "RACE": "WHITE"},
-        "EX": [{"USUBJID": "CT-ONC-201-01-101", "EXSTDTC": "2025-01-20", "EXTRT": "STUDY DRUG", "EXDOSE": 200}],
-        "CM": [],
-        "AE": [],
-        "DS": []
-      },
-      "ground_truth": {
-        "issues": [
-          {
-            "type": "dm_ex_date_mismatch",
-            "domain": "DM/EX",
-            "field": "RFSTDTC/EXSTDTC",
-            "description": "DM.RFSTDTC (2025-01-15) does not match the subject's first dosing date in EX (2025-01-20)."
-          }
-        ]
-      }
-    },
-    {
-      "case_id": "PV_T4_2",
-      "difficulty": "easy",
-      "task_description": "Review the SDTM records for subject 01-01-102 and identify any cross-domain inconsistencies. Return {'issues': [...]} or {'issues': []}.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. DM.RFSTDTC must match the earliest EX.EXSTDTC.\n2. Prohibited medications cannot start before RFSTDTC.\n3. Serious AEs require a matching DS record.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-102", "RFSTDTC": "2025-02-01", "SEX": "F", "RACE": "ASIAN"},
-        "EX": [{"USUBJID": "CT-ONC-201-01-102", "EXSTDTC": "2025-02-01", "EXTRT": "STUDY DRUG", "EXDOSE": 200}],
-        "CM": [{"USUBJID": "CT-ONC-201-01-102", "CMTRT": "Warfarin", "CMCAT": "PROHIBITED", "CMSTDTC": "2025-01-28"}],
-        "AE": [],
-        "DS": []
-      },
-      "ground_truth": {
-        "issues": [
-          {
-            "type": "prohibited_cm_before_first_dose",
-            "domain": "CM",
-            "field": "CMSTDTC",
-            "description": "Warfarin is marked PROHIBITED and starts before the subject's first dose date."
-          }
-        ]
-      }
-    },
-    {
-      "case_id": "PV_T4_3",
-      "difficulty": "medium",
-      "task_description": "Review the SDTM records for subject 01-02-201 and identify all cross-domain inconsistencies.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. Use the earliest EX start date as the reference first-dose date.\n2. Prohibited medications cannot begin before first dose.\n3. Any serious AE must be represented in DS.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-201", "RFSTDTC": "2025-03-10", "SEX": "M", "RACE": "BLACK OR AFRICAN AMERICAN"},
-        "EX": [{"USUBJID": "CT-ONC-201-01-201", "EXSTDTC": "2025-03-10", "EXTRT": "STUDY DRUG", "EXDOSE": 100}],
-        "CM": [],
-        "AE": [{"USUBJID": "CT-ONC-201-01-201", "AETERM": "Sepsis", "AESER": "Y", "AESTDTC": "2025-03-22"}],
-        "DS": []
-      },
-      "ground_truth": {
-        "issues": [
-          {
-            "type": "orphan_sae",
-            "domain": "AE/DS",
-            "field": "AESER",
-            "description": "The serious AE 'Sepsis' has AESER='Y' but no matching DS record documenting the serious event."
-          }
-        ]
-      }
-    },
-    {
-      "case_id": "PV_T4_4",
-      "difficulty": "medium",
-      "task_description": "Review the SDTM records for subject 01-02-202 and identify all cross-domain inconsistencies.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. DM.RFSTDTC must match the earliest EX.EXSTDTC.\n2. Prohibited medications cannot begin before first dose.\n3. Serious AEs require a DS companion record.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-202", "RFSTDTC": "2025-04-05", "SEX": "F", "RACE": "WHITE"},
-        "EX": [{"USUBJID": "CT-ONC-201-01-202", "EXSTDTC": "2025-04-08", "EXTRT": "STUDY DRUG", "EXDOSE": 100}],
-        "CM": [{"USUBJID": "CT-ONC-201-01-202", "CMTRT": "Prednisone", "CMCAT": "PROHIBITED", "CMSTDTC": "2025-03-29"}],
-        "AE": [],
-        "DS": []
-      },
-      "ground_truth": {
-        "issues": [
-          {
-            "type": "dm_ex_date_mismatch",
-            "domain": "DM/EX",
-            "field": "RFSTDTC/EXSTDTC",
-            "description": "DM reference start date does not match the earliest exposure start date."
-          },
-          {
-            "type": "prohibited_cm_before_first_dose",
-            "domain": "CM",
-            "field": "CMSTDTC",
-            "description": "Prednisone is prohibited and starts before first dose."
-          }
-        ]
-      }
-    },
-    {
-      "case_id": "PV_T4_5",
-      "difficulty": "medium",
-      "task_description": "Review the SDTM records for subject 01-03-301 and identify all cross-domain inconsistencies. If the records are consistent, return {'issues': []}.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. Compare DM.RFSTDTC with the earliest EX.EXSTDTC.\n2. Prohibited CM records must not predate first dose.\n3. Serious AEs require corresponding DS evidence.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-301", "RFSTDTC": "2025-05-01", "SEX": "M", "RACE": "ASIAN"},
-        "EX": [
-          {"USUBJID": "CT-ONC-201-01-301", "EXSTDTC": "2025-05-01", "EXTRT": "STUDY DRUG", "EXDOSE": 100},
-          {"USUBJID": "CT-ONC-201-01-301", "EXSTDTC": "2025-05-15", "EXTRT": "STUDY DRUG", "EXDOSE": 100}
-        ],
-        "CM": [{"USUBJID": "CT-ONC-201-01-301", "CMTRT": "Vitamin D", "CMCAT": "ALLOWED", "CMSTDTC": "2025-04-25"}],
-        "AE": [{"USUBJID": "CT-ONC-201-01-301", "AETERM": "Febrile neutropenia", "AESER": "Y", "AESTDTC": "2025-05-20"}],
-        "DS": [{"USUBJID": "CT-ONC-201-01-301", "DSTERM": "SERIOUS ADVERSE EVENT", "DSDECOD": "STUDY DISCONTINUATION DUE TO AE"}]
-      },
-      "ground_truth": {
-        "issues": []
-      }
-    },
-    {
-      "case_id": "PV_T4_6",
-      "difficulty": "medium",
-      "task_description": "Review the SDTM records for subject 01-03-302 and identify all cross-domain inconsistencies. Return {'issues': []} only if everything is consistent.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. The earliest EX.EXSTDTC is the first-dose date and must match DM.RFSTDTC.\n2. Prohibited medications cannot start before first dose.\n3. Serious AEs require supporting DS evidence.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-302", "RFSTDTC": "2025-05-12", "SEX": "F", "RACE": "WHITE"},
-        "EX": [
-          {"USUBJID": "CT-ONC-201-01-302", "EXSTDTC": "2025-05-10", "EXTRT": "STUDY DRUG", "EXDOSE": 150},
-          {"USUBJID": "CT-ONC-201-01-302", "EXSTDTC": "2025-05-24", "EXTRT": "STUDY DRUG", "EXDOSE": 150}
-        ],
-        "CM": [],
-        "AE": [],
-        "DS": []
-      },
-      "ground_truth": {
-        "issues": [
-          {
-            "type": "dm_ex_date_mismatch",
-            "domain": "DM/EX",
-            "field": "RFSTDTC/EXSTDTC",
-            "description": "DM.RFSTDTC does not match the earliest recorded dosing date in EX."
-          }
-        ]
-      }
-    },
-    {
-      "case_id": "PV_T4_7",
-      "difficulty": "hard",
-      "task_description": "Review the SDTM records for subject 01-04-401 and identify all cross-domain inconsistencies.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. Compare DM.RFSTDTC with the earliest EX date.\n2. Any CM row with CMCAT='PROHIBITED' must not start before first dose.\n3. Every serious AE must have a DS companion record.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-401", "RFSTDTC": "2025-06-15", "SEX": "M", "RACE": "ASIAN"},
-        "EX": [{"USUBJID": "CT-ONC-201-01-401", "EXSTDTC": "2025-06-15", "EXTRT": "STUDY DRUG", "EXDOSE": 120}],
-        "CM": [{"USUBJID": "CT-ONC-201-01-401", "CMTRT": "Azathioprine", "CMCAT": "PROHIBITED", "CMSTDTC": "2025-06-01"}],
-        "AE": [{"USUBJID": "CT-ONC-201-01-401", "AETERM": "Pneumonitis", "AESER": "Y", "AESTDTC": "2025-07-02"}],
-        "DS": []
-      },
-      "ground_truth": {
-        "issues": [
-          {
-            "type": "prohibited_cm_before_first_dose",
-            "domain": "CM",
-            "field": "CMSTDTC",
-            "description": "Azathioprine is prohibited and begins before the subject's first dose."
-          },
-          {
-            "type": "orphan_sae",
-            "domain": "AE/DS",
-            "field": "AESER",
-            "description": "The serious AE 'Pneumonitis' has no matching DS record."
-          }
-        ]
-      }
-    },
-    {
-      "case_id": "PV_T4_8",
-      "difficulty": "hard",
-      "task_description": "Review the SDTM records for subject 01-04-402 and identify all cross-domain inconsistencies. Return {'issues': []} if no issues are found.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. Use the earliest EX date as the subject's first dose date.\n2. Prohibited medications cannot predate first dose.\n3. Any AE with AESER='Y' requires DS evidence.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-402", "RFSTDTC": "2025-06-20", "SEX": "F", "RACE": "BLACK OR AFRICAN AMERICAN"},
-        "EX": [{"USUBJID": "CT-ONC-201-01-402", "EXSTDTC": "2025-06-20", "EXTRT": "STUDY DRUG", "EXDOSE": 120}],
-        "CM": [{"USUBJID": "CT-ONC-201-01-402", "CMTRT": "Loperamide", "CMCAT": "ALLOWED", "CMSTDTC": "2025-06-18"}],
-        "AE": [{"USUBJID": "CT-ONC-201-01-402", "AETERM": "Colitis", "AESER": "Y", "AESTDTC": "2025-07-15"}],
-        "DS": [{"USUBJID": "CT-ONC-201-01-402", "DSTERM": "SERIOUS ADVERSE EVENT", "DSDECOD": "STUDY DISCONTINUATION DUE TO AE"}]
-      },
-      "ground_truth": {
-        "issues": []
-      }
-    },
-    {
-      "case_id": "PV_T4_9",
-      "difficulty": "hard",
-      "task_description": "Review the SDTM records for subject 01-05-501 and identify all cross-domain inconsistencies.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. DM.RFSTDTC must equal the earliest EX.EXSTDTC.\n2. Prohibited CM records cannot start before first dose.\n3. Serious AEs must have a DS companion record documenting the event.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-501", "RFSTDTC": "2025-07-09", "SEX": "M", "RACE": "WHITE"},
-        "EX": [
-          {"USUBJID": "CT-ONC-201-01-501", "EXSTDTC": "2025-07-12", "EXTRT": "STUDY DRUG", "EXDOSE": 180},
-          {"USUBJID": "CT-ONC-201-01-501", "EXSTDTC": "2025-07-26", "EXTRT": "STUDY DRUG", "EXDOSE": 180}
-        ],
-        "CM": [{"USUBJID": "CT-ONC-201-01-501", "CMTRT": "Tacrolimus", "CMCAT": "PROHIBITED", "CMSTDTC": "2025-07-01"}],
-        "AE": [{"USUBJID": "CT-ONC-201-01-501", "AETERM": "Acute kidney injury", "AESER": "Y", "AESTDTC": "2025-08-02"}],
-        "DS": []
-      },
-      "ground_truth": {
-        "issues": [
-          {
-            "type": "dm_ex_date_mismatch",
-            "domain": "DM/EX",
-            "field": "RFSTDTC/EXSTDTC",
-            "description": "DM.RFSTDTC precedes the actual first exposure date recorded in EX."
-          },
-          {
-            "type": "prohibited_cm_before_first_dose",
-            "domain": "CM",
-            "field": "CMSTDTC",
-            "description": "Tacrolimus is prohibited and starts before first dose."
-          },
-          {
-            "type": "orphan_sae",
-            "domain": "AE/DS",
-            "field": "AESER",
-            "description": "The serious AE 'Acute kidney injury' has no matching DS record."
-          }
-        ]
-      }
-    },
-    {
-      "case_id": "PV_T4_10",
-      "difficulty": "very_hard",
-      "task_description": "Review the SDTM records for subject 01-05-502 and identify all cross-domain inconsistencies. Return {'issues': []} only if the records are consistent.",
-      "study_context": "Study CT-ONC-201.\n\nCross-domain rules:\n1. Compare DM.RFSTDTC with the earliest EX date.\n2. Any medication with CMCAT='PROHIBITED' must not begin before first dose.\n3. A serious AE requires a corresponding DS record, but non-serious AEs do not.",
-      "input_data": {
-        "DM": {"USUBJID": "CT-ONC-201-01-502", "RFSTDTC": "2025-07-30", "SEX": "F", "RACE": "ASIAN"},
-        "EX": [
-          {"USUBJID": "CT-ONC-201-01-502", "EXSTDTC": "2025-07-30", "EXTRT": "STUDY DRUG", "EXDOSE": 180},
-          {"USUBJID": "CT-ONC-201-01-502", "EXSTDTC": "2025-08-13", "EXTRT": "STUDY DRUG", "EXDOSE": 180}
-        ],
-        "CM": [
-          {"USUBJID": "CT-ONC-201-01-502", "CMTRT": "Ondansetron", "CMCAT": "ALLOWED", "CMSTDTC": "2025-07-30"},
-          {"USUBJID": "CT-ONC-201-01-502", "CMTRT": "Trimethoprim", "CMCAT": "PROHIBITED", "CMSTDTC": "2025-08-05"}
-        ],
-        "AE": [
-          {"USUBJID": "CT-ONC-201-01-502", "AETERM": "Headache", "AESER": "N", "AESTDTC": "2025-08-01"},
-          {"USUBJID": "CT-ONC-201-01-502", "AETERM": "Severe rash", "AESER": "Y", "AESTDTC": "2025-08-10"}
-        ],
-        "DS": [{"USUBJID": "CT-ONC-201-01-502", "DSTERM": "SERIOUS ADVERSE EVENT", "DSDECOD": "STUDY DISCONTINUATION DUE TO AE"}]
-      },
-      "ground_truth": {
-        "issues": []
-      }
-    }
-  ]
+    "task_name":  "task4_cross_domain_validation",
+    "description":  "Identify cross-domain SDTM inconsistencies across DM, EX, CM, AE, and DS domains using a pharmaverse-style benchmark with difficulty progression.",
+    "cases":  [
+                  {
+                      "case_id":  "PV_T4_1",
+                      "difficulty":  "easy",
+                      "task_description":  "Review the SDTM records for subject 01-01-101 and identify any cross-domain inconsistencies. Return a JSON object with key \u0027issues\u0027. Each issue must include \u0027type\u0027, \u0027domain\u0027, \u0027field\u0027, and \u0027description\u0027. If no issues exist, return {\u0027issues\u0027: []}.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nEASY CASE: Single issue type. Examine the one most obvious inconsistency.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-101",
+                                                    "RFSTDTC":  "2025-01-15",
+                                                    "SEX":  "M",
+                                                    "RACE":  "WHITE"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-101",
+                                                        "EXSTDTC":  "2025-01-20",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  200
+                                                    }
+                                                ],
+                                         "CM":  [
+
+                                                ],
+                                         "AE":  [
+
+                                                ],
+                                         "DS":  [
+
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+                                                          {
+                                                              "type":  "dm_ex_date_mismatch",
+                                                              "domain":  "DM/EX",
+                                                              "field":  "RFSTDTC/EXSTDTC",
+                                                              "description":  "DM.RFSTDTC (2025-01-15) does not match the subject\u0027s first dosing date in EX (2025-01-20)."
+                                                          }
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_2",
+                      "difficulty":  "easy",
+                      "task_description":  "Review the SDTM records for subject 01-01-102 and identify any cross-domain inconsistencies. Return {\u0027issues\u0027: [...]} or {\u0027issues\u0027: []}.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nEASY CASE: Single issue type. Examine the one most obvious inconsistency.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-102",
+                                                    "RFSTDTC":  "2025-02-01",
+                                                    "SEX":  "F",
+                                                    "RACE":  "ASIAN"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-102",
+                                                        "EXSTDTC":  "2025-02-01",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  200
+                                                    }
+                                                ],
+                                         "CM":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-102",
+                                                        "CMTRT":  "Warfarin",
+                                                        "CMCAT":  "PROHIBITED",
+                                                        "CMSTDTC":  "2025-01-28"
+                                                    }
+                                                ],
+                                         "AE":  [
+
+                                                ],
+                                         "DS":  [
+
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+                                                          {
+                                                              "type":  "prohibited_cm_before_first_dose",
+                                                              "domain":  "CM",
+                                                              "field":  "CMSTDTC",
+                                                              "description":  "Warfarin is marked PROHIBITED and starts before the subject\u0027s first dose date."
+                                                          }
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_3",
+                      "difficulty":  "medium",
+                      "task_description":  "Review the SDTM records for subject 01-02-201 and identify all cross-domain inconsistencies.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nMEDIUM CASE: Check all three rules carefully. One rule is violated; the others are satisfied.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-201",
+                                                    "RFSTDTC":  "2025-03-10",
+                                                    "SEX":  "M",
+                                                    "RACE":  "BLACK OR AFRICAN AMERICAN"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-201",
+                                                        "EXSTDTC":  "2025-03-10",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  100
+                                                    }
+                                                ],
+                                         "CM":  [
+
+                                                ],
+                                         "AE":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-201",
+                                                        "AETERM":  "Sepsis",
+                                                        "AESER":  "Y",
+                                                        "AESTDTC":  "2025-03-22"
+                                                    }
+                                                ],
+                                         "DS":  [
+
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+                                                          {
+                                                              "type":  "orphan_sae",
+                                                              "domain":  "AE/DS",
+                                                              "field":  "AESER",
+                                                              "description":  "The serious AE \u0027Sepsis\u0027 has AESER=\u0027Y\u0027 but no matching DS record documenting the serious event."
+                                                          }
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_4",
+                      "difficulty":  "medium",
+                      "task_description":  "Review the SDTM records for subject 01-02-202 and identify all cross-domain inconsistencies.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nMEDIUM CASE: Check all three rules carefully. One rule is violated; the others are satisfied.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-202",
+                                                    "RFSTDTC":  "2025-04-05",
+                                                    "SEX":  "F",
+                                                    "RACE":  "WHITE"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-202",
+                                                        "EXSTDTC":  "2025-04-08",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  100
+                                                    }
+                                                ],
+                                         "CM":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-202",
+                                                        "CMTRT":  "Prednisone",
+                                                        "CMCAT":  "PROHIBITED",
+                                                        "CMSTDTC":  "2025-03-29"
+                                                    }
+                                                ],
+                                         "AE":  [
+
+                                                ],
+                                         "DS":  [
+
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+                                                          {
+                                                              "type":  "dm_ex_date_mismatch",
+                                                              "domain":  "DM/EX",
+                                                              "field":  "RFSTDTC/EXSTDTC",
+                                                              "description":  "DM reference start date does not match the earliest exposure start date."
+                                                          },
+                                                          {
+                                                              "type":  "prohibited_cm_before_first_dose",
+                                                              "domain":  "CM",
+                                                              "field":  "CMSTDTC",
+                                                              "description":  "Prednisone is prohibited and starts before first dose."
+                                                          }
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_5",
+                      "difficulty":  "medium",
+                      "task_description":  "Review the SDTM records for subject 01-03-301 and identify all cross-domain inconsistencies. If the records are consistent, return {\u0027issues\u0027: []}.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nCLEAN RECORD CASE: All three protocol rules are satisfied for this subject. Return {\"issues\": []}. Not every subject in CT-ONC-201 has data inconsistencies.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-301",
+                                                    "RFSTDTC":  "2025-05-01",
+                                                    "SEX":  "M",
+                                                    "RACE":  "ASIAN"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-301",
+                                                        "EXSTDTC":  "2025-05-01",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  100
+                                                    },
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-301",
+                                                        "EXSTDTC":  "2025-05-15",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  100
+                                                    }
+                                                ],
+                                         "CM":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-301",
+                                                        "CMTRT":  "Vitamin D",
+                                                        "CMCAT":  "ALLOWED",
+                                                        "CMSTDTC":  "2025-04-25"
+                                                    }
+                                                ],
+                                         "AE":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-301",
+                                                        "AETERM":  "Febrile neutropenia",
+                                                        "AESER":  "Y",
+                                                        "AESTDTC":  "2025-05-20"
+                                                    }
+                                                ],
+                                         "DS":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-301",
+                                                        "DSTERM":  "SERIOUS ADVERSE EVENT",
+                                                        "DSDECOD":  "STUDY DISCONTINUATION DUE TO AE"
+                                                    }
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_6",
+                      "difficulty":  "medium",
+                      "task_description":  "Review the SDTM records for subject 01-03-302 and identify all cross-domain inconsistencies. Return {\u0027issues\u0027: []} only if everything is consistent.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nCLEAN RECORD CASE: All three protocol rules are satisfied for this subject. Return {\"issues\": []}. Not every subject in CT-ONC-201 has data inconsistencies.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-302",
+                                                    "RFSTDTC":  "2025-05-12",
+                                                    "SEX":  "F",
+                                                    "RACE":  "WHITE"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-302",
+                                                        "EXSTDTC":  "2025-05-10",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  150
+                                                    },
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-302",
+                                                        "EXSTDTC":  "2025-05-24",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  150
+                                                    }
+                                                ],
+                                         "CM":  [
+
+                                                ],
+                                         "AE":  [
+
+                                                ],
+                                         "DS":  [
+
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+                                                          {
+                                                              "type":  "dm_ex_date_mismatch",
+                                                              "domain":  "DM/EX",
+                                                              "field":  "RFSTDTC/EXSTDTC",
+                                                              "description":  "DM.RFSTDTC does not match the earliest recorded dosing date in EX."
+                                                          }
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_7",
+                      "difficulty":  "hard",
+                      "task_description":  "Review the SDTM records for subject 01-04-401 and identify all cross-domain inconsistencies.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nHARD CASE: Multiple domain records present. There may be distractors ÔÇö a medication or AE that looks suspicious but actually conforms to protocol. Read CMCAT and AESER values carefully before flagging.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-401",
+                                                    "RFSTDTC":  "2025-06-15",
+                                                    "SEX":  "M",
+                                                    "RACE":  "ASIAN"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-401",
+                                                        "EXSTDTC":  "2025-06-15",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  120
+                                                    }
+                                                ],
+                                         "CM":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-401",
+                                                        "CMTRT":  "Azathioprine",
+                                                        "CMCAT":  "PROHIBITED",
+                                                        "CMSTDTC":  "2025-06-01"
+                                                    }
+                                                ],
+                                         "AE":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-401",
+                                                        "AETERM":  "Pneumonitis",
+                                                        "AESER":  "Y",
+                                                        "AESTDTC":  "2025-07-02"
+                                                    }
+                                                ],
+                                         "DS":  [
+
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+                                                          {
+                                                              "type":  "prohibited_cm_before_first_dose",
+                                                              "domain":  "CM",
+                                                              "field":  "CMSTDTC",
+                                                              "description":  "Azathioprine is prohibited and begins before the subject\u0027s first dose."
+                                                          },
+                                                          {
+                                                              "type":  "orphan_sae",
+                                                              "domain":  "AE/DS",
+                                                              "field":  "AESER",
+                                                              "description":  "The serious AE \u0027Pneumonitis\u0027 has no matching DS record."
+                                                          }
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_8",
+                      "difficulty":  "hard",
+                      "task_description":  "Review the SDTM records for subject 01-04-402 and identify all cross-domain inconsistencies. Return {\u0027issues\u0027: []} if no issues are found.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nHARD CASE: Multiple domain records present. There may be distractors ÔÇö a medication or AE that looks suspicious but actually conforms to protocol. Read CMCAT and AESER values carefully before flagging.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-402",
+                                                    "RFSTDTC":  "2025-06-20",
+                                                    "SEX":  "F",
+                                                    "RACE":  "BLACK OR AFRICAN AMERICAN"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-402",
+                                                        "EXSTDTC":  "2025-06-20",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  120
+                                                    }
+                                                ],
+                                         "CM":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-402",
+                                                        "CMTRT":  "Loperamide",
+                                                        "CMCAT":  "ALLOWED",
+                                                        "CMSTDTC":  "2025-06-18"
+                                                    }
+                                                ],
+                                         "AE":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-402",
+                                                        "AETERM":  "Colitis",
+                                                        "AESER":  "Y",
+                                                        "AESTDTC":  "2025-07-15"
+                                                    }
+                                                ],
+                                         "DS":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-402",
+                                                        "DSTERM":  "SERIOUS ADVERSE EVENT",
+                                                        "DSDECOD":  "STUDY DISCONTINUATION DUE TO AE"
+                                                    }
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_9",
+                      "difficulty":  "hard",
+                      "task_description":  "Review the SDTM records for subject 01-05-501 and identify all cross-domain inconsistencies.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nHARD CASE: Multiple domain records present. There may be distractors ÔÇö a medication or AE that looks suspicious but actually conforms to protocol. Read CMCAT and AESER values carefully before flagging.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-501",
+                                                    "RFSTDTC":  "2025-07-09",
+                                                    "SEX":  "M",
+                                                    "RACE":  "WHITE"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-501",
+                                                        "EXSTDTC":  "2025-07-12",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  180
+                                                    },
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-501",
+                                                        "EXSTDTC":  "2025-07-26",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  180
+                                                    }
+                                                ],
+                                         "CM":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-501",
+                                                        "CMTRT":  "Tacrolimus",
+                                                        "CMCAT":  "PROHIBITED",
+                                                        "CMSTDTC":  "2025-07-01"
+                                                    }
+                                                ],
+                                         "AE":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-501",
+                                                        "AETERM":  "Acute kidney injury",
+                                                        "AESER":  "Y",
+                                                        "AESTDTC":  "2025-08-02"
+                                                    }
+                                                ],
+                                         "DS":  [
+
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+                                                          {
+                                                              "type":  "dm_ex_date_mismatch",
+                                                              "domain":  "DM/EX",
+                                                              "field":  "RFSTDTC/EXSTDTC",
+                                                              "description":  "DM.RFSTDTC precedes the actual first exposure date recorded in EX."
+                                                          },
+                                                          {
+                                                              "type":  "prohibited_cm_before_first_dose",
+                                                              "domain":  "CM",
+                                                              "field":  "CMSTDTC",
+                                                              "description":  "Tacrolimus is prohibited and starts before first dose."
+                                                          },
+                                                          {
+                                                              "type":  "orphan_sae",
+                                                              "domain":  "AE/DS",
+                                                              "field":  "AESER",
+                                                              "description":  "The serious AE \u0027Acute kidney injury\u0027 has no matching DS record."
+                                                          }
+                                                      ]
+                                       }
+                  },
+                  {
+                      "case_id":  "PV_T4_10",
+                      "difficulty":  "very_hard",
+                      "task_description":  "Review the SDTM records for subject 01-05-502 and identify all cross-domain inconsistencies. Return {\u0027issues\u0027: []} only if the records are consistent.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nCROSS-DOMAIN CONSISTENCY RULES (Protocol Sections 4.5, 8.2, 10.1)\n\nRULE 1 ÔÇö First Dose Date (Protocol 4.5):\nDM.RFSTDTC must equal the date of first investigational product administration.\nThis is the earliest EXSTDTC across all EX records for the subject.\nA mismatch of even one day is a protocol deviation requiring a data query.\n\nRULE 2 ÔÇö Prohibited Medications (Protocol 8.2):\nMedications with CMCAT=\u0027PROHIBITED\u0027 or CMSCAT=\u0027PROTOCOL PROHIBITED\u0027 must not start before RFSTDTC.\nPermitted medications (CMCAT=\u0027GENERAL\u0027, \u0027PRIOR\u0027, or \u0027SUPPORTIVE\u0027) are NOT flagged ÔÇö only PROHIBITED category.\nCMSTDTC before or on RFSTDTC = violation.\n\nRULE 3 ÔÇö Serious Adverse Events (Protocol 10.1 / SAP 9.2):\nAny AE with AESER=\u0027Y\u0027 must have a corresponding DS record.\nDS.DSDECOD must be one of: ADVERSE EVENT, DEATH, DISCONTINUED DUE TO AE.\nAn SAE without a DS companion record is an orphan SAE ÔÇö a critical data integrity issue.\n\nRULE 4 ÔÇö Clean Records:\nNot every subject has data issues. If all three rules are satisfied, return {\"issues\": []}.\n\nVERY HARD CASE: Multiple EX records, multiple CM records, and multiple AE records. Two rules are violated simultaneously. A permitted CM record (CMCAT=\u0027GENERAL\u0027) is present as a distractor ÔÇö do not flag it.",
+                      "input_data":  {
+                                         "DM":  {
+                                                    "USUBJID":  "CT-ONC-201-01-502",
+                                                    "RFSTDTC":  "2025-07-30",
+                                                    "SEX":  "F",
+                                                    "RACE":  "ASIAN"
+                                                },
+                                         "EX":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-502",
+                                                        "EXSTDTC":  "2025-07-30",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  180
+                                                    },
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-502",
+                                                        "EXSTDTC":  "2025-08-13",
+                                                        "EXTRT":  "STUDY DRUG",
+                                                        "EXDOSE":  180
+                                                    }
+                                                ],
+                                         "CM":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-502",
+                                                        "CMTRT":  "Ondansetron",
+                                                        "CMCAT":  "ALLOWED",
+                                                        "CMSTDTC":  "2025-07-30"
+                                                    },
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-502",
+                                                        "CMTRT":  "Trimethoprim",
+                                                        "CMCAT":  "PROHIBITED",
+                                                        "CMSTDTC":  "2025-08-05"
+                                                    }
+                                                ],
+                                         "AE":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-502",
+                                                        "AETERM":  "Headache",
+                                                        "AESER":  "N",
+                                                        "AESTDTC":  "2025-08-01"
+                                                    },
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-502",
+                                                        "AETERM":  "Severe rash",
+                                                        "AESER":  "Y",
+                                                        "AESTDTC":  "2025-08-10"
+                                                    }
+                                                ],
+                                         "DS":  [
+                                                    {
+                                                        "USUBJID":  "CT-ONC-201-01-502",
+                                                        "DSTERM":  "SERIOUS ADVERSE EVENT",
+                                                        "DSDECOD":  "STUDY DISCONTINUATION DUE TO AE"
+                                                    }
+                                                ]
+                                     },
+                      "ground_truth":  {
+                                           "issues":  [
+
+                                                      ]
+                                       }
+                  }
+              ]
 }

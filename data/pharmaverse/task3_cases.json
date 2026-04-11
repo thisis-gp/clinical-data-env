@@ -1,1006 +1,1006 @@
 {
-  "task_name": "task3_sdtm_to_adam",
-  "description": "Pharmaverse HbA1c lab records converted to ADLB-style outputs. 10 cases with 3-9 visits each (easy to very hard).",
-  "cases": [
-    {
-      "case_id": "PV_T3_1",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 3 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Derive one ADLB-style record per visit. Your output MUST be a JSON array where EVERY row contains ALL of these fields:\n  USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n\nDerivation rules:\n- USUBJID: copy from input row\n- VISIT: copy from input row\n- PARAM: LBTEST + ' [' + LBSTRESU + ']'\n- AVAL: LBSTRESN (copy exactly, preserve all decimal places)\n- BASE: AVAL from the SCREENING 1 row (same value repeated on every row)\n- CHG: AVAL - BASE, rounded to 2 decimal places\n- PCHG: ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL: 'Y' for the SCREENING 1 row only; empty string '' for all other rows\n- ANL01FL: '' for SCREENING 1; 'Y' for every post-baseline visit\n\nDo NOT omit any field. Do NOT use null or 'N'. Use empty string '' where a flag is not set.",
-      "difficulty": "easy",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 62.84175,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 12",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 51.91275,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 55.19145,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 62.84175,
-          "BASE": 62.84175,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 12",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 51.91275,
-          "BASE": 62.84175,
-          "CHG": -10.93,
-          "PCHG": -17.39,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 55.19145,
-          "BASE": 62.84175,
-          "CHG": -7.65,
-          "PCHG": -12.17,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_2",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1028 using the 3 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Derive one ADLB-style record per visit. Your output MUST be a JSON array where EVERY row contains ALL of these fields:\n  USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n\nDerivation rules:\n- USUBJID: copy from input row\n- VISIT: copy from input row\n- PARAM: LBTEST + ' [' + LBSTRESU + ']'\n- AVAL: LBSTRESN (copy exactly, preserve all decimal places)\n- BASE: AVAL from the SCREENING 1 row (same value repeated on every row)\n- CHG: AVAL - BASE, rounded to 2 decimal places\n- PCHG: ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL: 'Y' for the SCREENING 1 row only; empty string '' for all other rows\n- ANL01FL: '' for SCREENING 1; 'Y' for every post-baseline visit\n\nDo NOT omit any field. Do NOT use null or 'N'. Use empty string '' where a flag is not set.",
-      "difficulty": "easy",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 31.14765,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 12",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 65.02755,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 40.98375,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 31.14765,
-          "BASE": 31.14765,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 12",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 65.02755,
-          "BASE": 31.14765,
-          "CHG": 33.88,
-          "PCHG": 108.77,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 40.98375,
-          "BASE": 31.14765,
-          "CHG": 9.84,
-          "PCHG": 31.58,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_3",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1034 using the 3 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Derive one ADLB-style record per visit. Your output MUST be a JSON array where EVERY row contains ALL of these fields:\n  USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n\nDerivation rules:\n- USUBJID: copy from input row\n- VISIT: copy from input row\n- PARAM: LBTEST + ' [' + LBSTRESU + ']'\n- AVAL: LBSTRESN (copy exactly, preserve all decimal places)\n- BASE: AVAL from the SCREENING 1 row (same value repeated on every row)\n- CHG: AVAL - BASE, rounded to 2 decimal places\n- PCHG: ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL: 'Y' for the SCREENING 1 row only; empty string '' for all other rows\n- ANL01FL: '' for SCREENING 1; 'Y' for every post-baseline visit\n\nDo NOT omit any field. Do NOT use null or 'N'. Use empty string '' where a flag is not set.",
-      "difficulty": "easy",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 27.86895,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 12",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 37.70505,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 54.09855,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 27.86895,
-          "BASE": 27.86895,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 12",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 37.70505,
-          "BASE": 27.86895,
-          "CHG": 9.84,
-          "PCHG": 35.29,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 54.09855,
-          "BASE": 27.86895,
-          "CHG": 26.23,
-          "PCHG": 94.12,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_4",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 4 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Derive one ADLB-style record per visit. Your output MUST be a JSON array where EVERY row contains ALL of these fields:\n  USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n\nDerivation rules:\n- USUBJID: copy from input row\n- VISIT: copy from input row\n- PARAM: LBTEST + ' [' + LBSTRESU + ']'\n- AVAL: LBSTRESN (copy exactly, preserve all decimal places)\n- BASE: AVAL from the SCREENING 1 row (same value repeated on every row)\n- CHG: AVAL - BASE, rounded to 2 decimal places\n- PCHG: ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL: 'Y' for the SCREENING 1 row only; empty string '' for all other rows\n- ANL01FL: '' for SCREENING 1; 'Y' for every post-baseline visit\n\nDo NOT omit any field. Do NOT use null or 'N'. Use empty string '' where a flag is not set.",
-      "difficulty": "medium",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 62.84175,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 2",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 71.58495,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 12",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 51.91275,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 55.19145,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 62.84175,
-          "BASE": 62.84175,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 2",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 71.58495,
-          "BASE": 62.84175,
-          "CHG": 8.74,
-          "PCHG": 13.91,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 12",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 51.91275,
-          "BASE": 62.84175,
-          "CHG": -10.93,
-          "PCHG": -17.39,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 55.19145,
-          "BASE": 62.84175,
-          "CHG": -7.65,
-          "PCHG": -12.17,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_5",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1028 using the 4 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Derive one ADLB-style record per visit. Your output MUST be a JSON array where EVERY row contains ALL of these fields:\n  USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n\nDerivation rules:\n- USUBJID: copy from input row\n- VISIT: copy from input row\n- PARAM: LBTEST + ' [' + LBSTRESU + ']'\n- AVAL: LBSTRESN (copy exactly, preserve all decimal places)\n- BASE: AVAL from the SCREENING 1 row (same value repeated on every row)\n- CHG: AVAL - BASE, rounded to 2 decimal places\n- PCHG: ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL: 'Y' for the SCREENING 1 row only; empty string '' for all other rows\n- ANL01FL: '' for SCREENING 1; 'Y' for every post-baseline visit\n\nDo NOT omit any field. Do NOT use null or 'N'. Use empty string '' where a flag is not set.",
-      "difficulty": "medium",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 31.14765,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 6",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 25.68315,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 12",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 65.02755,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 40.98375,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 31.14765,
-          "BASE": 31.14765,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 6",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 25.68315,
-          "BASE": 31.14765,
-          "CHG": -5.46,
-          "PCHG": -17.54,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 12",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 65.02755,
-          "BASE": 31.14765,
-          "CHG": 33.88,
-          "PCHG": 108.77,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 40.98375,
-          "BASE": 31.14765,
-          "CHG": 9.84,
-          "PCHG": 31.58,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_6",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1034 using the 4 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Derive one ADLB-style record per visit. Your output MUST be a JSON array where EVERY row contains ALL of these fields:\n  USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n\nDerivation rules:\n- USUBJID: copy from input row\n- VISIT: copy from input row\n- PARAM: LBTEST + ' [' + LBSTRESU + ']'\n- AVAL: LBSTRESN (copy exactly, preserve all decimal places)\n- BASE: AVAL from the SCREENING 1 row (same value repeated on every row)\n- CHG: AVAL - BASE, rounded to 2 decimal places\n- PCHG: ((AVAL - BASE) / BASE) * 100, rounded to 2 decimal places\n- ABLFL: 'Y' for the SCREENING 1 row only; empty string '' for all other rows\n- ANL01FL: '' for SCREENING 1; 'Y' for every post-baseline visit\n\nDo NOT omit any field. Do NOT use null or 'N'. Use empty string '' where a flag is not set.",
-      "difficulty": "medium",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 27.86895,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 2",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 23.49735,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 8",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 51.91275,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 54.09855,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 27.86895,
-          "BASE": 27.86895,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 2",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 23.49735,
-          "BASE": 27.86895,
-          "CHG": -4.37,
-          "PCHG": -15.69,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 8",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 51.91275,
-          "BASE": 27.86895,
-          "CHG": 24.04,
-          "PCHG": 86.27,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 54.09855,
-          "BASE": 27.86895,
-          "CHG": 26.23,
-          "PCHG": 94.12,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_7",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 5 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Protocol context: derive an ADLB-style efficacy dataset for HbA1c across all available visits for a single subject.\n\nOutput requirements:\n- Return one analysis row per input row\n- Every output row must contain: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n- Use standard ADLB baseline and change-from-baseline conventions\n- Baseline is the SCREENING 1 assessment for the subject\n- Post-baseline records are part of the primary analysis set\n- Preserve the lab test wording and units when forming PARAM\n- Use empty string '' rather than null when a flag is not set",
-      "difficulty": "hard",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 62.84175,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 2",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 71.58495,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 8",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 72.67785,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 16",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 33.33345,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 55.19145,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 62.84175,
-          "BASE": 62.84175,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 2",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 71.58495,
-          "BASE": 62.84175,
-          "CHG": 8.74,
-          "PCHG": 13.91,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 8",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 72.67785,
-          "BASE": 62.84175,
-          "CHG": 9.84,
-          "PCHG": 15.65,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 16",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 33.33345,
-          "BASE": 62.84175,
-          "CHG": -29.51,
-          "PCHG": -46.96,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 55.19145,
-          "BASE": 62.84175,
-          "CHG": -7.65,
-          "PCHG": -12.17,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_8",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1028 using the 5 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Protocol context: derive an ADLB-style efficacy dataset for HbA1c across all available visits for a single subject.\n\nOutput requirements:\n- Return one analysis row per input row\n- Every output row must contain: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n- Use standard ADLB baseline and change-from-baseline conventions\n- Baseline is the SCREENING 1 assessment for the subject\n- Post-baseline records are part of the primary analysis set\n- Preserve the lab test wording and units when forming PARAM\n- Use empty string '' rather than null when a flag is not set",
-      "difficulty": "hard",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 31.14765,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 6",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 25.68315,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 12",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 65.02755,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 20",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 20.21865,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 26",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 26.77605,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 31.14765,
-          "BASE": 31.14765,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 6",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 25.68315,
-          "BASE": 31.14765,
-          "CHG": -5.46,
-          "PCHG": -17.54,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 12",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 65.02755,
-          "BASE": 31.14765,
-          "CHG": 33.88,
-          "PCHG": 108.77,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 20",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 20.21865,
-          "BASE": 31.14765,
-          "CHG": -10.93,
-          "PCHG": -35.09,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1028",
-          "VISIT": "WEEK 26",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 26.77605,
-          "BASE": 31.14765,
-          "CHG": -4.37,
-          "PCHG": -14.04,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_9",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1034 using the 5 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Protocol context: derive an ADLB-style efficacy dataset for HbA1c across all available visits for a single subject.\n\nOutput requirements:\n- Return one analysis row per input row\n- Every output row must contain: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n- Use standard ADLB baseline and change-from-baseline conventions\n- Baseline is the SCREENING 1 assessment for the subject\n- Post-baseline records are part of the primary analysis set\n- Preserve the lab test wording and units when forming PARAM\n- Use empty string '' rather than null when a flag is not set",
-      "difficulty": "hard",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 27.86895,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 2",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 23.49735,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 8",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 51.91275,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 16",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 39.89085,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 26",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 60.65595,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 27.86895,
-          "BASE": 27.86895,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 2",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 23.49735,
-          "BASE": 27.86895,
-          "CHG": -4.37,
-          "PCHG": -15.69,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 8",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 51.91275,
-          "BASE": 27.86895,
-          "CHG": 24.04,
-          "PCHG": 86.27,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 16",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 39.89085,
-          "BASE": 27.86895,
-          "CHG": 12.02,
-          "PCHG": 43.14,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1034",
-          "VISIT": "WEEK 26",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 60.65595,
-          "BASE": 27.86895,
-          "CHG": 32.79,
-          "PCHG": 117.65,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    },
-    {
-      "case_id": "PV_T3_10",
-      "task_description": "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 9 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
-      "study_context": "Protocol context: derive an ADLB-style efficacy dataset for HbA1c across all available visits for a single subject.\n\nOutput requirements:\n- Return one analysis row per input row\n- Every output row must contain: USUBJID, VISIT, PARAM, AVAL, BASE, CHG, PCHG, ABLFL, ANL01FL\n- Use standard ADLB baseline and change-from-baseline conventions\n- Baseline is the SCREENING 1 assessment for the subject\n- Post-baseline records are part of the primary analysis set\n- Preserve the lab test wording and units when forming PARAM\n- Use empty string '' rather than null when a flag is not set",
-      "difficulty": "very hard",
-      "input_data": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 62.84175,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 2",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 71.58495,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 6",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 69.39915,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 8",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 72.67785,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 12",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 51.91275,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 16",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 33.33345,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 20",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 72.67785,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 55.19145,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 26",
-          "LBTESTCD": "HBA1CHGB",
-          "LBTEST": "Hemoglobin A1C/Hemoglobin",
-          "LBSTRESN": 58.47015,
-          "LBSTRESU": "mmol/mol",
-          "LBBLFL": ""
-        }
-      ],
-      "ground_truth": [
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "SCREENING 1",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 62.84175,
-          "BASE": 62.84175,
-          "CHG": 0.0,
-          "PCHG": 0.0,
-          "ABLFL": "Y",
-          "ANL01FL": ""
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 2",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 71.58495,
-          "BASE": 62.84175,
-          "CHG": 8.74,
-          "PCHG": 13.91,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 6",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 69.39915,
-          "BASE": 62.84175,
-          "CHG": 6.56,
-          "PCHG": 10.43,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 8",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 72.67785,
-          "BASE": 62.84175,
-          "CHG": 9.84,
-          "PCHG": 15.65,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 12",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 51.91275,
-          "BASE": 62.84175,
-          "CHG": -10.93,
-          "PCHG": -17.39,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 16",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 33.33345,
-          "BASE": 62.84175,
-          "CHG": -29.51,
-          "PCHG": -46.96,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 20",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 72.67785,
-          "BASE": 62.84175,
-          "CHG": 9.84,
-          "PCHG": 15.65,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 24",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 55.19145,
-          "BASE": 62.84175,
-          "CHG": -7.65,
-          "PCHG": -12.17,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        },
-        {
-          "USUBJID": "01-701-1015",
-          "VISIT": "WEEK 26",
-          "PARAM": "Hemoglobin A1C/Hemoglobin [mmol/mol]",
-          "AVAL": 58.47015,
-          "BASE": 62.84175,
-          "CHG": -4.37,
-          "PCHG": -6.96,
-          "ABLFL": "",
-          "ANL01FL": "Y"
-        }
-      ]
-    }
-  ]
+    "task_name":  "task3_sdtm_to_adam",
+    "description":  "Pharmaverse HbA1c lab records converted to ADLB-style outputs. 10 cases with 3-9 visits each (easy to very hard).",
+    "cases":  [
+                  {
+                      "case_id":  "PV_T3_1",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 3 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nEASY CASE: Single screening visit only. That screening visit is the baseline (ABLFL=\"Y\"). All post-baseline visits get ANL01FL=\"Y\".",
+                      "difficulty":  "easy",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  62.84175,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 12",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  51.91275,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  55.19145,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  62.84175,
+                                               "BASE":  62.84175,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 12",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  51.91275,
+                                               "BASE":  62.84175,
+                                               "CHG":  -10.93,
+                                               "PCHG":  -17.39,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  55.19145,
+                                               "BASE":  62.84175,
+                                               "CHG":  -7.65,
+                                               "PCHG":  -12.17,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_2",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1028 using the 3 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nEASY CASE: Single screening visit only. That screening visit is the baseline (ABLFL=\"Y\"). All post-baseline visits get ANL01FL=\"Y\".",
+                      "difficulty":  "easy",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  31.14765,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 12",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  65.02755,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  40.98375,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  31.14765,
+                                               "BASE":  31.14765,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 12",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  65.02755,
+                                               "BASE":  31.14765,
+                                               "CHG":  33.88,
+                                               "PCHG":  108.77,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  40.98375,
+                                               "BASE":  31.14765,
+                                               "CHG":  9.84,
+                                               "PCHG":  31.58,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_3",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1034 using the 3 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nEASY CASE: Single screening visit only. That screening visit is the baseline (ABLFL=\"Y\"). All post-baseline visits get ANL01FL=\"Y\".",
+                      "difficulty":  "easy",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  27.86895,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 12",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  37.70505,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  54.09855,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  27.86895,
+                                               "BASE":  27.86895,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 12",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  37.70505,
+                                               "BASE":  27.86895,
+                                               "CHG":  9.84,
+                                               "PCHG":  35.29,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  54.09855,
+                                               "BASE":  27.86895,
+                                               "CHG":  26.23,
+                                               "PCHG":  94.12,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_4",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 4 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nMEDIUM CASE: Multiple post-baseline visits. Use the single screening visit as baseline. Apply ANL01FL=\"Y\" to all scheduled post-baseline visits.",
+                      "difficulty":  "medium",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  62.84175,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 2",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  71.58495,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 12",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  51.91275,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  55.19145,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  62.84175,
+                                               "BASE":  62.84175,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 2",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  71.58495,
+                                               "BASE":  62.84175,
+                                               "CHG":  8.74,
+                                               "PCHG":  13.91,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 12",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  51.91275,
+                                               "BASE":  62.84175,
+                                               "CHG":  -10.93,
+                                               "PCHG":  -17.39,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  55.19145,
+                                               "BASE":  62.84175,
+                                               "CHG":  -7.65,
+                                               "PCHG":  -12.17,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_5",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1028 using the 4 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nMEDIUM CASE: Multiple post-baseline visits. Use the single screening visit as baseline. Apply ANL01FL=\"Y\" to all scheduled post-baseline visits.",
+                      "difficulty":  "medium",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  31.14765,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 6",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  25.68315,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 12",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  65.02755,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  40.98375,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  31.14765,
+                                               "BASE":  31.14765,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 6",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  25.68315,
+                                               "BASE":  31.14765,
+                                               "CHG":  -5.46,
+                                               "PCHG":  -17.54,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 12",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  65.02755,
+                                               "BASE":  31.14765,
+                                               "CHG":  33.88,
+                                               "PCHG":  108.77,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  40.98375,
+                                               "BASE":  31.14765,
+                                               "CHG":  9.84,
+                                               "PCHG":  31.58,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_6",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1034 using the 4 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nMEDIUM CASE: Multiple post-baseline visits. Use the single screening visit as baseline. Apply ANL01FL=\"Y\" to all scheduled post-baseline visits.",
+                      "difficulty":  "medium",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  27.86895,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 2",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  23.49735,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 8",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  51.91275,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  54.09855,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  27.86895,
+                                               "BASE":  27.86895,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 2",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  23.49735,
+                                               "BASE":  27.86895,
+                                               "CHG":  -4.37,
+                                               "PCHG":  -15.69,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 8",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  51.91275,
+                                               "BASE":  27.86895,
+                                               "CHG":  24.04,
+                                               "PCHG":  86.27,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  54.09855,
+                                               "BASE":  27.86895,
+                                               "CHG":  26.23,
+                                               "PCHG":  94.12,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_7",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 5 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nHARD CASE: TWO screening visits are present. Per SAP 5.3.1, SCREENING 2 is the baseline (ABLFL=\"Y\"), NOT SCREENING 1. SCREENING 1 gets ABLFL=\"\" and ANL01FL=\"\". A common error is using SCREENING 1 as baseline when SCREENING 2 exists.",
+                      "difficulty":  "hard",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  62.84175,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 2",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  71.58495,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 8",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  72.67785,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 16",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  33.33345,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  55.19145,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  62.84175,
+                                               "BASE":  62.84175,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 2",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  71.58495,
+                                               "BASE":  62.84175,
+                                               "CHG":  8.74,
+                                               "PCHG":  13.91,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 8",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  72.67785,
+                                               "BASE":  62.84175,
+                                               "CHG":  9.84,
+                                               "PCHG":  15.65,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 16",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  33.33345,
+                                               "BASE":  62.84175,
+                                               "CHG":  -29.51,
+                                               "PCHG":  -46.96,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  55.19145,
+                                               "BASE":  62.84175,
+                                               "CHG":  -7.65,
+                                               "PCHG":  -12.17,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_8",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1028 using the 5 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nHARD CASE: TWO screening visits are present. Per SAP 5.3.1, SCREENING 2 is the baseline (ABLFL=\"Y\"), NOT SCREENING 1. SCREENING 1 gets ABLFL=\"\" and ANL01FL=\"\". A common error is using SCREENING 1 as baseline when SCREENING 2 exists.",
+                      "difficulty":  "hard",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  31.14765,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 6",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  25.68315,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 12",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  65.02755,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 20",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  20.21865,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1028",
+                                             "VISIT":  "WEEK 26",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  26.77605,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  31.14765,
+                                               "BASE":  31.14765,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 6",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  25.68315,
+                                               "BASE":  31.14765,
+                                               "CHG":  -5.46,
+                                               "PCHG":  -17.54,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 12",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  65.02755,
+                                               "BASE":  31.14765,
+                                               "CHG":  33.88,
+                                               "PCHG":  108.77,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 20",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  20.21865,
+                                               "BASE":  31.14765,
+                                               "CHG":  -10.93,
+                                               "PCHG":  -35.09,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1028",
+                                               "VISIT":  "WEEK 26",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  26.77605,
+                                               "BASE":  31.14765,
+                                               "CHG":  -4.37,
+                                               "PCHG":  -14.04,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_9",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1034 using the 5 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nHARD CASE: TWO screening visits are present. Per SAP 5.3.1, SCREENING 2 is the baseline (ABLFL=\"Y\"), NOT SCREENING 1. SCREENING 1 gets ABLFL=\"\" and ANL01FL=\"\". A common error is using SCREENING 1 as baseline when SCREENING 2 exists.",
+                      "difficulty":  "hard",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  27.86895,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 2",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  23.49735,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 8",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  51.91275,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 16",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  39.89085,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1034",
+                                             "VISIT":  "WEEK 26",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  60.65595,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  27.86895,
+                                               "BASE":  27.86895,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 2",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  23.49735,
+                                               "BASE":  27.86895,
+                                               "CHG":  -4.37,
+                                               "PCHG":  -15.69,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 8",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  51.91275,
+                                               "BASE":  27.86895,
+                                               "CHG":  24.04,
+                                               "PCHG":  86.27,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 16",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  39.89085,
+                                               "BASE":  27.86895,
+                                               "CHG":  12.02,
+                                               "PCHG":  43.14,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1034",
+                                               "VISIT":  "WEEK 26",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  60.65595,
+                                               "BASE":  27.86895,
+                                               "CHG":  32.79,
+                                               "PCHG":  117.65,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  },
+                  {
+                      "case_id":  "PV_T3_10",
+                      "task_description":  "Derive an ADLB-style analysis dataset for subject 01-701-1015 using the 9 supplied HbA1c SDTM laboratory rows. Return a JSON array with one record per input row. Every record must contain all 9 required fields.",
+                      "study_context":  "Study: CT-ONC-201 ÔÇö Phase 2 Oncology Study\nSponsor: Veritas Pharmaceuticals\n\nSAP Section 5.3 ÔÇö ADLB Derivation Rules (HbA1c primary endpoint)\n\nBASELINE DEFINITION (SAP 5.3.1):\n- Baseline = the LAST non-missing assessment BEFORE first dose (RFSTDTC).\n- If SCREENING 1 and SCREENING 2 both exist, use SCREENING 2 as baseline (ABLFL=\"Y\"). SCREENING 1 gets ABLFL=\"\".\n- If only one screening visit exists, that visit is baseline.\n- Visits on or after RFSTDTC are post-baseline. They must NOT have ABLFL=\"Y\".\n\nANALYSIS FLAG (SAP 5.3.2):\n- ANL01FL=\"Y\" for scheduled post-baseline on-treatment visits (WEEK 4, WEEK 8, WEEK 12, WEEK 24, etc.)\n- ANL01FL=\"\" for baseline row and all UNSCHEDULED visits.\n\nDERIVATIONS:\n- AVAL = LBSTRESN (numeric result)\n- PARAM = LBTEST + \u0027 [\u0027 + LBSTRESU + \u0027]\u0027\n- BASE = AVAL from the ABLFL=\"Y\" row for this subject+parameter\n- CHG = AVAL - BASE (0.0 for the baseline row)\n- PCHG = round((CHG / BASE) * 100, 2) ÔÇö set to 0.0 for baseline row\n\nVERY HARD CASE: An UNSCHEDULED visit is present. Include it in output but set ANL01FL=\"\" for unscheduled visits regardless of timing. Additionally two screening visits exist ÔÇö apply the SCREENING 2 baseline rule.",
+                      "difficulty":  "very hard",
+                      "input_data":  [
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "SCREENING 1",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  62.84175,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  "Y"
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 2",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  71.58495,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 6",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  69.39915,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 8",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  72.67785,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 12",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  51.91275,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 16",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  33.33345,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 20",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  72.67785,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 24",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  55.19145,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         },
+                                         {
+                                             "USUBJID":  "01-701-1015",
+                                             "VISIT":  "WEEK 26",
+                                             "LBTESTCD":  "HBA1CHGB",
+                                             "LBTEST":  "Hemoglobin A1C/Hemoglobin",
+                                             "LBSTRESN":  58.47015,
+                                             "LBSTRESU":  "mmol/mol",
+                                             "LBBLFL":  ""
+                                         }
+                                     ],
+                      "ground_truth":  [
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "SCREENING 1",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  62.84175,
+                                               "BASE":  62.84175,
+                                               "CHG":  0.0,
+                                               "PCHG":  0.0,
+                                               "ABLFL":  "Y",
+                                               "ANL01FL":  ""
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 2",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  71.58495,
+                                               "BASE":  62.84175,
+                                               "CHG":  8.74,
+                                               "PCHG":  13.91,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 6",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  69.39915,
+                                               "BASE":  62.84175,
+                                               "CHG":  6.56,
+                                               "PCHG":  10.43,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 8",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  72.67785,
+                                               "BASE":  62.84175,
+                                               "CHG":  9.84,
+                                               "PCHG":  15.65,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 12",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  51.91275,
+                                               "BASE":  62.84175,
+                                               "CHG":  -10.93,
+                                               "PCHG":  -17.39,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 16",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  33.33345,
+                                               "BASE":  62.84175,
+                                               "CHG":  -29.51,
+                                               "PCHG":  -46.96,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 20",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  72.67785,
+                                               "BASE":  62.84175,
+                                               "CHG":  9.84,
+                                               "PCHG":  15.65,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 24",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  55.19145,
+                                               "BASE":  62.84175,
+                                               "CHG":  -7.65,
+                                               "PCHG":  -12.17,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           },
+                                           {
+                                               "USUBJID":  "01-701-1015",
+                                               "VISIT":  "WEEK 26",
+                                               "PARAM":  "Hemoglobin A1C/Hemoglobin [mmol/mol]",
+                                               "AVAL":  58.47015,
+                                               "BASE":  62.84175,
+                                               "CHG":  -4.37,
+                                               "PCHG":  -6.96,
+                                               "ABLFL":  "",
+                                               "ANL01FL":  "Y"
+                                           }
+                                       ]
+                  }
+              ]
 }

@@ -92,7 +92,7 @@ def _load_all_data() -> dict:
 
     for task_id in TASK_ORDER:
         path = data_dir / f"task{task_id}_cases.json"
-        with open(path, encoding="utf-8") as f:
+        with open(path, encoding="utf-8-sig") as f:
             data[task_id] = json.load(f)
     return data
 
