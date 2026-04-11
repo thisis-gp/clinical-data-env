@@ -208,6 +208,33 @@ RATE_LIMIT_MAX_RETRIES=3 python scripts/run_local_benchmark.py --tasks task4
 - Structured sub-scores for richer training signal
 - Terminal summaries with per-case and per-difficulty breakdowns
 
+## RL Training Results
+
+We also validated that the environment supports actual learning, not just static evaluation.
+
+Task 4 (`task4_cross_domain_validation`) was used for a small GRPO fine-tuning experiment with:
+
+- base model: `Qwen/Qwen2.5-3B-Instruct`
+- method: LoRA + GRPO
+- config: `r=16`, `2` generations, `3` epochs, `learning_rate=5e-06`
+- hardware: single T4 GPU notebook run
+
+### Task 4 Improvement
+
+| Metric | Baseline (zero-shot) | After GRPO | Delta |
+|--------|----------------------|------------|-------|
+| Task 4 overall | `0.6123` | `0.6913` | `+0.0790` |
+| Task 4 easy | `0.5000` | `0.5000` | `+0.0000` |
+| Task 4 medium | `0.5875` | `0.7850` | `+0.1975` |
+| Task 4 hard | `0.6744` | `0.6744` | `+0.0000` |
+| Task 4 very_hard | `0.7500` | `0.7500` | `+0.0000` |
+
+Interpretation:
+
+- the environment provides enough reward signal for a smaller open model to improve on Task 4
+- the biggest gain appeared on medium-difficulty cases, where the model had room to learn from structured reward feedback
+- this is presented as early evidence of trainability rather than a claim that Task 4 is solved
+
 ## Setup
 
 ### Local Development
